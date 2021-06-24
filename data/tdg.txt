@@ -1,0 +1,62 @@
+10
+41	467	6334	8500	1169	6724	2478	2358	8962	6464	
+
+41
+Nguyen Huu
+Phuoc
+Nam
+1
+
+467
+Nguyen Duc Tuong
+Vy
+Nu
+1
+
+6334
+Nguyen Hoang
+Thai
+Nam
+1
+
+1169
+Co Thieu
+Hoang
+Nam
+1
+
+2478
+Dang Thi
+Quynh
+Nu
+1
+
+2358
+Mai Lan
+Anh
+Nu
+1
+
+8500
+She
+Phuoc
+Nam
+1
+
+6724
+Another
+Phuoc
+Nam
+1
+
+6464
+Lai La
+Phuoc
+Nam
+1
+
+8962
+Van La
+Phuoc
+Nam
+1
