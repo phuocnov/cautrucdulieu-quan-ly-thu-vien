@@ -1,3 +1,4 @@
+#include <iostream>
 #include "schema_all.h"
 
 #define MIN_RANGE 1000
@@ -167,13 +168,6 @@ namespace the_doc_gia{
 
 namespace dau_sach{
     // Danh mục sách
-    DanhMucSach CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int length){
-        DanhMucSach temp;
-        temp.maSach = randomInt(MIN_RANGE, MAX_RANGE);
-        temp.trangThaiSach = trangthai;
-        temp.viaTri = viatri;
-        return temp;
-    }
     
     void checkMaSach(DanhMucSach &dms, int arrayID[], int &arrayIDlength){
         bool isContinune = true;
@@ -202,13 +196,22 @@ namespace dau_sach{
             continue;
         }
     }
+    DanhMucSach CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int length){
+        DanhMucSach temp;
+        temp.maSach = randomInt(MIN_RANGE, MAX_RANGE);
+        temp.trangThaiSach = trangthai;
+        temp.viaTri = viatri;
+        checkMaSach(temp, arrayID, length);
+        return temp;
+    }
     
     node_DanhMucSach* AddToListBook(DanhMucSach &dms, node_DanhMucSach *&llist, int arrayID[], int length){
         node_DanhMucSach* newllist = new node_DanhMucSach;
         newllist->dms = dms;
         if(llist == NULL){
             checkMaSach(dms, arrayID, length);
-            return newllist;
+            llist = newllist;
+            return llist;
         }
         else{
             newllist->next = llist;
@@ -228,7 +231,7 @@ namespace dau_sach{
     // Đầu sách
     DauSach Create(int ISBN, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, node_DanhMucSach* danhMucSach){
         DauSach temp;
-        temp.ISBN = randomInt(MIN_RANGE, MAX_RANGE);
+        temp.ISBN = ISBN;
         temp.tenSach = tensach;
         temp.soTrang = sotrang;
         temp.tacGia = tacgia;
@@ -258,5 +261,35 @@ namespace dau_sach{
         list.node[pos] = data;
         list.size++;
         return SUCCESS;
+    }
+    
+    // Test only
+    void CreateAndAddBook(node_DanhMucSach* node_dms, node_DauSach* node_dausach, int arrayDMS[], int size){
+        int ISBN;
+        string tenSach;
+        int soTrang;
+        string tacGia;
+        int namXuatBan;
+        string theLoai;
+        
+        cin >> ISBN;
+        cin.ignore();
+        getline(cin ,tenSach);
+        cin >> soTrang;
+        cin.ignore();
+        getline(cin, tacGia);
+        cin >> namXuatBan;
+        cin.ignore();
+        getline(cin, theLoai);
+        
+        
+        TrangThaiSach trangThaiSach = CHO_MUON_DUOC;
+        string viaTri;
+        getline(cin, viaTri);
+        
+        DanhMucSach dms = CreateDMS(trangThaiSach, viaTri, arrayDMS, size);
+        node_DanhMucSach* book_pointer = AddToListBook(dms, node_dms, arrayDMS, size);
+        Create(ISBN, tenSach, soTrang, tacGia, namXuatBan, theLoai, book_pointer);
+        
     }
 }
