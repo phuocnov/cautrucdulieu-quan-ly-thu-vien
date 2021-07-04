@@ -78,6 +78,11 @@ namespace the_doc_gia{
     } 
 }
 
+namespace dau_sach{
+void printDauSach(){
+    
+}
+}
 
 int main(){
     node_DanhSachTheDocGia* root = NULL;

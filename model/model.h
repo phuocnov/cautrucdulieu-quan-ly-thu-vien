@@ -196,27 +196,31 @@ namespace dau_sach{
             continue;
         }
     }
-    DanhMucSach CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int length){
-        DanhMucSach temp;
-        temp.maSach = randomInt(MIN_RANGE, MAX_RANGE);
-        temp.trangThaiSach = trangthai;
-        temp.viaTri = viatri;
-        checkMaSach(temp, arrayID, length);
+    DanhMucSach *CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int length){
+        DanhMucSach* temp = new DanhMucSach;
+        temp->maSach = randomInt(MIN_RANGE, MAX_RANGE);
+        temp->trangThaiSach = trangthai;
+        temp->viaTri = viatri;
+        checkMaSach(*temp, arrayID, length);
         return temp;
     }
     
-    node_DanhMucSach* AddToListBook(DanhMucSach &dms, node_DanhMucSach *&llist, int arrayID[], int length){
+    node_DanhMucSach* AddToListBook(DanhMucSach* &dms, node_DanhMucSach *&llist, int arrayID[], int length){
         node_DanhMucSach* newllist = new node_DanhMucSach;
-        newllist->dms = dms;
+        newllist->dms = *dms;
+        newllist->next = NULL;
         if(llist == NULL){
-            checkMaSach(dms, arrayID, length);
+            // checkMaSach(*dms, arrayID, length);
             llist = newllist;
-            return llist;
+            return newllist;
+        }
+        else if(llist != NULL && llist->next == NULL){
+            llist->next = newllist;
+            return newllist;
         }
         else{
-            newllist->next = llist;
-            checkMaSach(dms, arrayID, length);
-            return newllist;
+                AddToListBook(dms, llist->next, arrayID, length);
+            // checkMaSach(*dms, arrayID, length);
         }
     }
     
@@ -255,41 +259,21 @@ namespace dau_sach{
         SUCCESS,
         FAILED
     };
-    status AddBook(DauSach* data, int pos, node_DauSach &list){
-        if(isFull(list) || pos < 0 || pos > list.size) return FAILED;
-        for(int i = list.size - 1; i > pos; i--) list.node[i+1] = list.node[i];
-        list.node[pos] = data;
-        list.size++;
-        return SUCCESS;
+    status AddBook(DauSach* data, node_DauSach* &list){
+        if(list == NULL){
+            node_DauSach temp;
+            temp.size = 1;
+            temp.node[0] = data;
+            list = &temp;
+            return SUCCESS;
+        }
+        else{
+            list->node[list->size] = data;
+            list->size++;
+            return SUCCESS;
+        }
     }
     
     // Test only
-    void CreateAndAddBook(node_DanhMucSach* node_dms, node_DauSach* node_dausach, int arrayDMS[], int size){
-        int ISBN;
-        string tenSach;
-        int soTrang;
-        string tacGia;
-        int namXuatBan;
-        string theLoai;
-        
-        cin >> ISBN;
-        cin.ignore();
-        getline(cin ,tenSach);
-        cin >> soTrang;
-        cin.ignore();
-        getline(cin, tacGia);
-        cin >> namXuatBan;
-        cin.ignore();
-        getline(cin, theLoai);
-        
-        
-        TrangThaiSach trangThaiSach = CHO_MUON_DUOC;
-        string viaTri;
-        getline(cin, viaTri);
-        
-        DanhMucSach dms = CreateDMS(trangThaiSach, viaTri, arrayDMS, size);
-        node_DanhMucSach* book_pointer = AddToListBook(dms, node_dms, arrayDMS, size);
-        Create(ISBN, tenSach, soTrang, tacGia, namXuatBan, theLoai, book_pointer);
-        
-    }
+    
 }

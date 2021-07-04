@@ -62,12 +62,12 @@ int main(){
     int ID = 0;
     node_DanhSachTheDocGia* searchResult = NULL;
     
-    // cout << "TEST CASE 2:: SEARCH BY ID" << endl;
-    // cout << "Nhap MA the: ";
-    // cin >> ID;
-    // searchResult = IDSearch(root_dstdg, ID);
-    // cout << "KET QUA" << endl;
-    // PrintNode(searchResult);
+    cout << "TEST CASE 2:: SEARCH BY ID" << endl;
+    cout << "Nhap MA the: ";
+    cin >> ID;
+    searchResult = the_doc_gia::IDSearch(root_dstdg, ID, arrayID, arrayIDlength);
+    cout << "KET QUA" << endl;
+    PrintNode(searchResult);
     
     
     cout << "TEST CASE 3:: DELETE BY ID" << endl;

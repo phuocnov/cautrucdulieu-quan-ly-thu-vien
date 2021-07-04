@@ -76,6 +76,6 @@ struct DauSach{
 };
 
 struct node_DauSach{
-    int size;
+    int size = 0;
     DauSach* node[MAX_DAU_SACH];
 };
