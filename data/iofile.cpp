@@ -88,24 +88,15 @@ void ReadArrayID(fstream& fileInput, int arrayID[], int &size){
         {
             fileInput >> arrayID[i];
         }
+        fileInput.ignore();
     }
 }
 void ReadBookData(fstream& fileInput, node_DanhMucSach* &node_dms, node_DauSach* &node_dausach, int size, int arrayDMS[]){
     if(fileInput.fail()) cout << "ERROR:: Khong the mo File, vui long kiem tra lai!!" << endl;
     else{
-        int ISBN;
-        string tensach;
-        int soTrang;
-        string tacgia;
-        int namXuatBan;
-        string theLoai;
-        
-        int maSach;
-        string viatri;
-        
         for (int i = 0; i < size; i++){
             DauSach dauSach;
-            DanhMucSach danhmuc;
+            DanhMucSach* danhmuc = new DanhMucSach;
             
             fileInput >> dauSach.ISBN;
             fileInput.ignore();
@@ -116,40 +107,80 @@ void ReadBookData(fstream& fileInput, node_DanhMucSach* &node_dms, node_DauSach*
             fileInput >>dauSach.namXuatBan;
             fileInput.ignore();
             getline(fileInput, dauSach.theLoai);
-            fileInput >> danhmuc.maSach;
+            fileInput >> danhmuc->maSach;
             fileInput.ignore();
-            getline(fileInput, danhmuc.viaTri);
+            getline(fileInput, danhmuc->viaTri);
             
-            DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, viatri, arrayDMS, size);
-            node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
-            DauSach* dausach = new DauSach;
-            *dausach = dau_sach::Create(ISBN, tensach, soTrang, tacgia, namXuatBan, theLoai, bindtobook);
-            dau_sach::AddBook(dausach, node_dausach);
+            // DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, danhmuc.viaTri, arrayDMS, size);
+            // node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
+            // DauSach* dausach = new DauSach;
+            // *dausach = dau_sach::Create(ISBN, tensach, soTrang, tacgia, namXuatBan, theLoai, bindtobook);
+            dau_sach::AddToListBook(danhmuc, node_dms);
+            dau_sach::AddBook(&dauSach, node_dausach);
         }
     }
+}
+void WriteArrayDMS(fstream& fileInput, int arrayID[], int size){
+    fileInput << size << endl;
+    for (int i = 0; i < size; i++)
+    {
+        fileInput << arrayID[i] << '\t';
+    }
+    fileInput << '\n' << endl;
+}
+
+void WriteBookData(fstream& fileInput, node_DauSach* node_dausach){
+    for (int i = 0; i < node_dausach->size; i++)
+    {
+        fileInput << node_dausach->node[i]->ISBN << endl;
+        fileInput << node_dausach->node[i]->tenSach << endl;
+        fileInput << node_dausach->node[i]->soTrang << endl;
+        fileInput << node_dausach->node[i]->tacGia << endl;
+        fileInput << node_dausach->node[i]->namXuatBan << endl;
+        fileInput << node_dausach->node[i]->theLoai << endl;
+        fileInput << node_dausach->node[i]->dms->dms.maSach << endl;
+        fileInput << node_dausach->node[i]->dms->dms.viaTri << endl;
+        fileInput << endl;
+    }
+    
 }
 }
 
 int main(){
-    node_DanhSachTheDocGia* root = NULL;
-    int arrayID[100];
-    int size = 0;
-    fstream fileInput("tdg.txt");
-    the_doc_gia::ReadArrayID(fileInput, arrayID, size);
-    the_doc_gia::ReadTheDocGia(fileInput, root, size);
-    the_doc_gia::PrintDSTDG(root);
-    fileInput.close();
-    
-    // node_DanhMucSach* node_dms = NULL;
-    // node_DauSach* node_dausach = NULL;
-    
-    // int arrayDMS[100];
-    // int arraysize = 0;
-    
-    // fstream fileInput("dausach.txt");
-    // // dau_sach::ReadArrayID(fileInput, arrayDMS, arraysize);
-    // dau_sach::ReadBookData(fileInput, node_dms, node_dausach, 3, arrayDMS);    
-    
+    // node_DanhSachTheDocGia* root = NULL;
+    // int arrayID[100];
+    // int size = 0;
+    // fstream fileInput("tdg.txt");
+    // the_doc_gia::ReadArrayID(fileInput, arrayID, size);
+    // the_doc_gia::ReadTheDocGia(fileInput, root, size);
+    // the_doc_gia::PrintDSTDG(root);
     // fileInput.close();
-    // return 0;
+    
+    node_DanhMucSach* node_dms = NULL;
+    node_DauSach* node_dausach = new node_DauSach;
+    
+    int arrayDMS[100];
+    int arraysize = 0;
+    
+    // Create DMS and add to it
+    
+    // for (int i = 0; i < 10; i++)
+    // {
+    //     DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, "tu 3 ke 2", arrayDMS, arraysize);
+    //     node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
+    //     DauSach* dausach = new DauSach;
+    //     *dausach = dau_sach::Create(12412, "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
+    //     dau_sach::AddBook(dausach, node_dausach);
+    // }
+    
+    fstream fileInput("dausach.txt");
+    
+    // dau_sach::WriteArrayDMS(fileInput, arrayDMS, arraysize);
+    // dau_sach::WriteBookData(fileInput, node_dausach);
+    
+    dau_sach::ReadArrayID(fileInput, arrayDMS, arraysize);
+    dau_sach::ReadBookData(fileInput, node_dms, node_dausach, arraysize, arrayDMS);
+    
+    fileInput.close();
+    return 0;
 }

@@ -195,7 +195,7 @@ namespace dau_sach{
             continue;
         }
     }
-    DanhMucSach *CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int length){
+    DanhMucSach *CreateDMS(TrangThaiSach trangthai, string viatri, int arrayID[], int &length){
         DanhMucSach* temp = new DanhMucSach;
         temp->maSach = randomInt(MIN_RANGE, MAX_RANGE);
         temp->trangThaiSach = trangthai;
@@ -213,10 +213,10 @@ namespace dau_sach{
             llist = newllist;
             return newllist;
         }
-        else if(llist != NULL && llist->next == NULL){
-            llist->next = newllist;
-            return newllist;
-        }
+        // else if(llist != NULL && llist->next == NULL){
+        //     llist->next = newllist;
+        //     return newllist;
+        // }
         else{
                 AddToListBook(dms, llist->next);
             // checkMaSach(*dms, arrayID, length);
@@ -259,11 +259,9 @@ namespace dau_sach{
         FAILED
     };
     status AddBook(DauSach* data, node_DauSach* &list){
-        if(list == NULL){
-            node_DauSach temp;
-            temp.size = 1;
-            temp.node[0] = data;
-            list = &temp;
+        if(list->size == 0){
+            list->size = 1;
+            list->node[0] = data;
             return SUCCESS;
         }
         else{
