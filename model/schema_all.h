@@ -55,8 +55,8 @@ enum TrangThaiMuonTra{
 struct DanhSachMuonTra{
     int IDnguoimuon;
     int maSach;
-    tm ngayMuon;
-    tm ngayTra;
+    Date ngayMuon;
+    Date ngayTra;
     TrangThaiMuonTra trangThaiMuonTra;
 };
 
@@ -64,6 +64,11 @@ struct node_DanhSachMuonTra{
     DanhSachMuonTra data;
     node_DanhSachMuonTra* next;
 };
+
+struct Date{
+	int day, month, year;
+};
+const int dateOfMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 // Đầu sách, danh sách tuyến tính
 
