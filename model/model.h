@@ -273,15 +273,17 @@ namespace dau_sach{
 }
 
 namespace danh_sach_muon_tra{
-    void MuonSach(node_DanhSachMuonTra* &dsmt, node_DanhSachTheDocGia* &nguoiMuon, int maSach, tm ngaymuon){
+    void MuonSach(node_DanhSachMuonTra* &dsmt, node_DanhSachTheDocGia* &nguoiMuon, int maSach, int ngay, int thang, int nam){
         if(nguoiMuon->data.trangThaiThe == HOAT_DONG && nguoiMuon->data.luotMuon > 0){
             DanhSachMuonTra data;
             data.IDnguoimuon = nguoiMuon->data.maThe;
-            data.ngayMuon = ngaymuon;
+            data.ngayMuon.day = ngay;
+            data.ngayMuon.month = thang;
+            data.ngayMuon.year = nam;
             data.trangThaiMuonTra = DANG_MUON;
             nguoiMuon->data.luotMuon--;
             if(dsmt == NULL)dsmt->data = data;
-            else MuonSach(dsmt->next, nguoiMuon, maSach, ngaymuon);
+            else MuonSach(dsmt->next, nguoiMuon, maSach, ngay, thang, nam);
         }
         else if(nguoiMuon->data.trangThaiThe == BI_KHOA){
             cout << "ERROR:: The nay da bi khoa, vui long mo khoa the, ma the: " << nguoiMuon->data.maThe<<endl;
@@ -293,12 +295,33 @@ namespace danh_sach_muon_tra{
             cout << "ERROR:: Loi khong xac dinh!"<<endl;
         }
     }
-    node_DanhSachMuonTra* listDanhSachMuon(node_DanhSachMuonTra *&dsmt, tm ngaytra, node_DanhSachTheDocGia* &dstdg, int ArrayID[], int arrayIDlength){
-        dsmt->data.ngayTra = ngaytra;
+    int countLeapYear(Date d){
+        int years = d.year;
+        if (d.month <= 2)
+            years--;
+        return years/4 - years/100 + years/400;
+    }
+    int getDateDifference(Date borrow, Date pay){
+        long int n1 = borrow.year * 365 + borrow.day;
+        for (int i = 0; i < borrow.month - 1; i++){
+            n1 += dateOfMonth[i];
+        }
+        n1 += countLeapYear(borrow);
+        long int n2 = pay.year * 365 + pay.day;
+        for (int i = 0; i < pay.month - 1; i++){
+            n2 += dateOfMonth[i];
+        }
+        n2 += countLeapYear(pay);
+        return (n2 - n1);
+    }
+    node_DanhSachMuonTra* listDanhSachMuon(node_DanhSachMuonTra *&dsmt, int ngay, int thang, int nam, node_DanhSachTheDocGia* &dstdg, int ArrayID[], int arrayIDlength){
+        dsmt->data.ngayTra.day = ngay;
+        dsmt->data.ngayTra.month = thang;
+        dsmt->data.ngayTra.year = nam;
         dsmt->data.trangThaiMuonTra = DA_TRA;
         node_DanhSachTheDocGia* nguoiMuon = the_doc_gia::IDSearch(dstdg, dsmt->data.IDnguoimuon, ArrayID, arrayIDlength);
         nguoiMuon->data.luotMuon++;
-        if(dsmt->data.ngayTra.tm_mday - dsmt->data.ngayMuon.tm_mday > 7){
+        if(getDateDifference(dsmt->data.ngayMuon, dsmt->data.ngayTra) > 7){
             nguoiMuon->data.trangThaiThe = BI_KHOA;
         }
     }
