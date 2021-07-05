@@ -40,11 +40,11 @@ namespace the_doc_gia{
                 getline(fileInput, tdg.ho);
                 fileInput >> tdg.ten;
                 fileInput >> tdg.phai;
-                
                 int temp;
                 fileInput >> temp;
                 if(temp == 1) tdg.trangThaiThe = HOAT_DONG;
                 else if(temp == 0) tdg.trangThaiThe = BI_KHOA;
+                fileInput >> tdg.luotMuon;
                 
                 the_doc_gia::Insert(root, tdg);
             }
@@ -70,17 +70,63 @@ namespace the_doc_gia{
                 fileInput << root->data.ten << '\n';
                 fileInput << root->data.phai << '\n';
                 fileInput << root->data.trangThaiThe << '\n' << '\n';
+                fileInput << root->data.luotMuon << '\n';
                 
                 WriteTheDocGia(fileInput, root->left);
                 WriteTheDocGia(fileInput, root->right);
             }
         }
-    } 
+    }
 }
 
 namespace dau_sach{
-void printDauSach(){
-    
+void ReadArrayID(fstream& fileInput, int arrayID[], int &size){
+    if(fileInput.fail()) cout << "ERROR:: Khong the mo File, vui long kiem tra lai!!" << endl;
+    else {
+        fileInput >> size;
+        for (int i = 0; i < size; i++)
+        {
+            fileInput >> arrayID[i];
+        }
+    }
+}
+void ReadBookData(fstream& fileInput, node_DanhMucSach* &node_dms, node_DauSach* &node_dausach, int size, int arrayDMS[]){
+    if(fileInput.fail()) cout << "ERROR:: Khong the mo File, vui long kiem tra lai!!" << endl;
+    else{
+        int ISBN;
+        string tensach;
+        int soTrang;
+        string tacgia;
+        int namXuatBan;
+        string theLoai;
+        
+        int maSach;
+        string viatri;
+        
+        for (int i = 0; i < size; i++){
+            DauSach dauSach;
+            DanhMucSach danhmuc;
+            
+            fileInput >> dauSach.ISBN;
+            fileInput.ignore();
+            getline(fileInput, dauSach.tenSach);
+            fileInput >> dauSach.soTrang;
+            fileInput.ignore();
+            getline(fileInput, dauSach.tacGia);
+            fileInput >>dauSach.namXuatBan;
+            fileInput.ignore();
+            getline(fileInput, dauSach.theLoai);
+            fileInput >> danhmuc.maSach;
+            fileInput.ignore();
+            getline(fileInput, danhmuc.viaTri);
+            
+            DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, viatri, arrayDMS, size);
+            node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
+            DauSach* dausach = new DauSach;
+            *dausach = dau_sach::Create(ISBN, tensach, soTrang, tacgia, namXuatBan, theLoai, bindtobook);
+            dau_sach::AddBook(dausach, node_dausach);
+        }
+    }
 }
 }
 
@@ -93,5 +139,17 @@ int main(){
     the_doc_gia::ReadTheDocGia(fileInput, root, size);
     the_doc_gia::PrintDSTDG(root);
     fileInput.close();
-    return 0;
+    
+    // node_DanhMucSach* node_dms = NULL;
+    // node_DauSach* node_dausach = NULL;
+    
+    // int arrayDMS[100];
+    // int arraysize = 0;
+    
+    // fstream fileInput("dausach.txt");
+    // // dau_sach::ReadArrayID(fileInput, arrayDMS, arraysize);
+    // dau_sach::ReadBookData(fileInput, node_dms, node_dausach, 3, arrayDMS);    
+    
+    // fileInput.close();
+    // return 0;
 }

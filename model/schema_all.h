@@ -37,6 +37,7 @@ struct TheDocGia{
     string ten;
     string phai;
     TrangThaiThe trangThaiThe;
+    int luotMuon = 3;
 };
 
 struct node_DanhSachTheDocGia{
@@ -52,6 +53,7 @@ enum TrangThaiMuonTra{
 };
 
 struct DanhSachMuonTra{
+    int IDnguoimuon;
     int maSach;
     tm ngayMuon;
     tm ngayTra;

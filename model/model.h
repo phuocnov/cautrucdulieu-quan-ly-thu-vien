@@ -167,8 +167,7 @@ namespace the_doc_gia{
 // Đầu sách
 
 namespace dau_sach{
-    // Danh mục sách
-    
+    // Danh mục sách  
     void checkMaSach(DanhMucSach &dms, int arrayID[], int &arrayIDlength){
         bool isContinune = true;
         while(isContinune){
@@ -205,7 +204,7 @@ namespace dau_sach{
         return temp;
     }
     
-    node_DanhMucSach* AddToListBook(DanhMucSach* &dms, node_DanhMucSach *&llist, int arrayID[], int length){
+    node_DanhMucSach* AddToListBook(DanhMucSach* &dms, node_DanhMucSach *&llist){
         node_DanhMucSach* newllist = new node_DanhMucSach;
         newllist->dms = *dms;
         newllist->next = NULL;
@@ -219,7 +218,7 @@ namespace dau_sach{
             return newllist;
         }
         else{
-                AddToListBook(dms, llist->next, arrayID, length);
+                AddToListBook(dms, llist->next);
             // checkMaSach(*dms, arrayID, length);
         }
     }
@@ -273,7 +272,36 @@ namespace dau_sach{
             return SUCCESS;
         }
     }
-    
-    // Test only
-    
+}
+
+namespace danh_sach_muon_tra{
+    void MuonSach(node_DanhSachMuonTra* &dsmt, node_DanhSachTheDocGia* &nguoiMuon, int maSach, tm ngaymuon){
+        if(nguoiMuon->data.trangThaiThe == HOAT_DONG && nguoiMuon->data.luotMuon > 0){
+            DanhSachMuonTra data;
+            data.IDnguoimuon = nguoiMuon->data.maThe;
+            data.ngayMuon = ngaymuon;
+            data.trangThaiMuonTra = DANG_MUON;
+            nguoiMuon->data.luotMuon--;
+            if(dsmt == NULL)dsmt->data = data;
+            else MuonSach(dsmt->next, nguoiMuon, maSach, ngaymuon);
+        }
+        else if(nguoiMuon->data.trangThaiThe == BI_KHOA){
+            cout << "ERROR:: The nay da bi khoa, vui long mo khoa the, ma the: " << nguoiMuon->data.maThe<<endl;
+        }
+        else if(nguoiMuon->data.luotMuon < 1){
+            cout << "ERROR:: Nguoi dung da het luot muon! " <<endl;
+        }
+        else{
+            cout << "ERROR:: Loi khong xac dinh!"<<endl;
+        }
+    }
+    node_DanhSachMuonTra* listDanhSachMuon(node_DanhSachMuonTra *&dsmt, tm ngaytra, node_DanhSachTheDocGia* &dstdg, int ArrayID[], int arrayIDlength){
+        dsmt->data.ngayTra = ngaytra;
+        dsmt->data.trangThaiMuonTra = DA_TRA;
+        node_DanhSachTheDocGia* nguoiMuon = the_doc_gia::IDSearch(dstdg, dsmt->data.IDnguoimuon, ArrayID, arrayIDlength);
+        nguoiMuon->data.luotMuon++;
+        if(dsmt->data.ngayTra.tm_mday - dsmt->data.ngayMuon.tm_mday > 7){
+            nguoiMuon->data.trangThaiThe = BI_KHOA;
+        }
+    }
 }
