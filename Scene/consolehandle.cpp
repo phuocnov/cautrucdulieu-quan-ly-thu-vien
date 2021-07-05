@@ -1,37 +1,77 @@
-#include <string>
-#include <windows.h>
+#include <Windows.h>
 
-using namespace std;
+#define Enter 13
+#define Up 72
+#define Down 90
 
-void color(int color){
-    HANDLE stdhandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(stdhandle, color);
+void gotoxy(short x,short y)
+{
+        HANDLE hConsoleOutput;
+        COORD Cursor_an_Pos = { x,y};
+        hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleCursorPosition(hConsoleOutput , Cursor_an_Pos);
+}  
+
+int wherex( void )
+{
+    HANDLE hConsoleOutput;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+    GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
+    return screen_buffer_info.dwCursorPosition.X;
 }
-void gotoxy(int x, int y){
-    HANDLE stdhandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD c;
-    c.X = x;
-    c.Y = y;
-    SetConsoleCursorPosition(stdhandle, c);
+
+int wherey( void )
+{
+    HANDLE hConsoleOutput;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+    GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
+    return screen_buffer_info.dwCursorPosition.Y;
+}
+void clreol( ) {
+COORD coord;
+DWORD written;
+CONSOLE_SCREEN_BUFFER_INFO info;
+GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+coord.X = info.dwCursorPosition.X;
+coord.Y = info.dwCursorPosition.Y;
+FillConsoleOutputCharacter (GetStdHandle(STD_OUTPUT_HANDLE), ' ',
+  info.dwSize.X - info.dwCursorPosition.X * info.dwCursorPosition.Y, coord, &written);
+gotoxy (info.dwCursorPosition.X , info.dwCursorPosition.Y );
 }
 
+void SetColor(WORD color)
+{
+    HANDLE hConsoleOutput;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
-#define MAX_CONTROL_ARRAY 5
-class Menu{
-    // MenuItem items[MAX_CONTROL_ARRAY];
-    int currentFocused;
-    
-    Menu(){
-        
-    }
-};
+    CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+    GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
 
-class MenuItem{
-public:
-    string context;
-    bool isSelected;
-    
-    MenuItem(string context){
-        this->context = context;
-    }
-};
+    WORD wAttributes = screen_buffer_info.wAttributes;
+    color &= 0x000f;
+    wAttributes &= 0xfff0;
+    wAttributes |= color;
+
+    SetConsoleTextAttribute(hConsoleOutput, wAttributes);
+}
+void SetBGColor(WORD color)
+{
+    HANDLE hConsoleOutput;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_SCREEN_BUFFER_INFO screen_buffer_info;
+    GetConsoleScreenBufferInfo(hConsoleOutput, &screen_buffer_info);
+
+    WORD wAttributes = screen_buffer_info.wAttributes;
+    color &= 0x000f;
+    color <<= 4;
+    wAttributes &= 0xff0f;
+    wAttributes |= color;
+
+    SetConsoleTextAttribute(hConsoleOutput, wAttributes);
+}
+void clrscr() {
+	system("cls");
+}

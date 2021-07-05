@@ -10,26 +10,6 @@ int main(){
     
     fstream fileInput("data/dausach.txt");
     
-    while (!fileInput.eof())
-    {
-        DauSach dauSach;
-            DanhMucSach danhmuc;
-            
-            fileInput >> dauSach.ISBN;
-            fileInput.ignore();
-            getline(fileInput, dauSach.tenSach);
-            fileInput >> dauSach.soTrang;
-            fileInput.ignore();
-            getline(fileInput, dauSach.tacGia);
-            fileInput >>dauSach.namXuatBan;
-            fileInput.ignore();
-            getline(fileInput, dauSach.theLoai);
-            fileInput >> danhmuc.maSach;
-            fileInput.ignore();
-            getline(fileInput, danhmuc.viaTri);
-    }
-    
-    
     getch();
     return 0;
 }
