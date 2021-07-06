@@ -3,7 +3,7 @@
 #include <string.h>
 #include <fstream>
 
-#include "data/iofile.cpp"
+#include "errorcheck.cpp"
 #include "Scene/consolehandle.cpp"
 using namespace std;
 
@@ -19,6 +19,9 @@ enum Scene{
     DOC_GIA_PERSONAL_REMOVE,
     DOC_GIA_PERSONAL_ADJUST,
     DOC_GIA_LIST,
+    DOC_GIA_LIST_PRINT,
+    DOC_GIA_LIST_IMPORT,
+    DOC_GIA_LIST_OUTPORT,
 };
 void resetcolorarray(int arr[], int size){
     for (int i = 1; i < size; i++)
@@ -32,7 +35,7 @@ int main(){
     // Console setup
     SetWindowSize(160, 90);
     // Data initialization
-    node_DanhSachTheDocGia* node_dstdg = new node_DanhSachTheDocGia;
+    node_DanhSachTheDocGia* node_dstdg = NULL;
     int array_tdg[MAX_TDG];
     int arraytdg_size = 0;
     
@@ -47,6 +50,7 @@ int main(){
     int option = 0; 
     bool isRunning = true;
     
+    // Doc gia
     string ho, ten, phai;
     
     
@@ -84,6 +88,7 @@ int main(){
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "Ten";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "Phai";
             SetColor(colorArray[3]); gotoxy(20,10);  cout << "Luu";
+            SetColor(colorArray[4]); gotoxy(20,11);  cout << "Thoat";
             
             // Value input
             SetColor(colorArray[0]); gotoxy(30,7);  cout << ho;
@@ -98,7 +103,13 @@ int main(){
             clrscr();
             
             break;
-        case DAU_SACH:
+        case DOC_GIA_LIST:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Xuat ra danh sach the doc gia";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Nhap danh sach the doc gia tu file";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat danh sach the doc gia tu file";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
             break;
         
         default:
@@ -162,7 +173,7 @@ int main(){
                     scene = DOC_GIA_PERSONAL_ADD;
                     option =0;
                     resetcolorarray(colorArray, optionSize);
-                    optionSize = 4;
+                    optionSize = 5;
                 }
                 if(option == 1){
                     scene = DOC_GIA_PERSONAL_ADJUST;
@@ -197,7 +208,16 @@ int main(){
                     char ans;
                     ans = getch();
                     if(ans == 'y'){
-                        gotoxy(20, 12); cout <<"DONE!!";
+                        gotoxy(20, 12); cout <<"CHECKING";
+                        if(check_tdg(ho, ten, phai)){
+                            TheDocGia newTDG = the_doc_gia::Create(ho, ten, phai, array_tdg, arraytdg_size);
+                            the_doc_gia::Insert(node_dstdg, newTDG);
+                            cout << "Thanh cong";
+                        }
+                        else{
+                            cout << "That bai, vui long kiem tra lai du lieu nhap, bam phim bat ky de tiep tuc";
+                            getch();
+                        }
                     }
                     else if(ans == 'n'){
                         ho = "";
@@ -205,7 +225,31 @@ int main(){
                         phai = "";
                     }
                 }
-                break;
+                if(option == 4){
+                    scene = DOC_GIA_PERSONAL;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
+                }
+            break;
+                
+            case DOC_GIA_LIST:
+                if(option == 0){
+                    scene = DOC_GIA_LIST_PRINT;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
+                }
+                if(option == 1){
+                    
+                }
+                if(option == 2){
+                    
+                }
+                if(option == 3){
+                    
+                }
+            break;
             default:
                 break;
             }
