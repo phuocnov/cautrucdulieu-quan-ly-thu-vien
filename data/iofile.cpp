@@ -69,8 +69,8 @@ namespace the_doc_gia{
                 fileInput << root->data.ho << '\n';
                 fileInput << root->data.ten << '\n';
                 fileInput << root->data.phai << '\n';
-                fileInput << root->data.trangThaiThe << '\n' << '\n';
-                fileInput << root->data.luotMuon << '\n';
+                fileInput << root->data.trangThaiThe << '\n';
+                fileInput << root->data.luotMuon << '\n'  << '\n';
                 
                 WriteTheDocGia(fileInput, root->left);
                 WriteTheDocGia(fileInput, root->right);

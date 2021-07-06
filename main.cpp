@@ -56,7 +56,6 @@ int main(){
     int array_tdg[MAX_TDG];
     int arraytdg_size = 0;
     string ho, ten, phai;
-    fstream file_dausach("data/tdg.txt");
     
     
     node_DauSach* node_dausach = new node_DauSach;
@@ -268,13 +267,18 @@ int main(){
                     resetcolorarray(colorArray, optionSize);
                 }
                 if(option == 1){
-                    the_doc_gia::ReadArrayID(file_dausach, array_tdg, arraytdg_size);
-                    the_doc_gia::ReadTheDocGia(file_dausach, node_dstdg, arraytdg_size);
+                    fstream file_tdg("data/tdg.txt");
+                    the_doc_gia::ReadArrayID(file_tdg, array_tdg, arraytdg_size);
+                    the_doc_gia::ReadTheDocGia(file_tdg, node_dstdg, arraytdg_size);
                     gotoxy(20, 12); cout << "Thanh cong! nhan phim bat ki de tiep tuc";
                     getch();
                 }
                 if(option == 2){
-                    
+                    fstream file_tdg("data/tdg.txt");
+                    the_doc_gia::WriteArray(file_tdg, array_tdg, arraytdg_size);
+                    the_doc_gia::WriteTheDocGia(file_tdg, node_dstdg);
+                    gotoxy(20, 12); cout << "Thanh cong! nhan phim bat ki de tiep tuc";
+                    getch();
                 }
                 if(option == 3){
                     scene = DOC_GIA;
