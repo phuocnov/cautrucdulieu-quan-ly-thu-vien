@@ -3,13 +3,212 @@
 #include <string.h>
 #include <fstream>
 
-#include "model/model.h"
+#include "data/iofile.cpp"
+#include "Scene/consolehandle.cpp"
 using namespace std;
+
+#define MAX_TDG 100
+
+enum Scene{
+    MAIN_MENU,
+    DOC_GIA,
+    DAU_SACH,
+    MUON_TRA,
+    DOC_GIA_PERSONAL,
+    DOC_GIA_PERSONAL_ADD,
+    DOC_GIA_PERSONAL_REMOVE,
+    DOC_GIA_PERSONAL_ADJUST,
+    DOC_GIA_LIST,
+};
+void resetcolorarray(int arr[], int size){
+    for (int i = 1; i < size; i++)
+    {
+        arr[i] = 7;
+    }
+    arr[0] = 1;
+}
+
 int main(){
-    std::cout << "CHUONG TRINH QUAN LY THU VIEN" << std::endl;
+    // Console setup
+    SetWindowSize(160, 90);
+    // Data initialization
+    node_DanhSachTheDocGia* node_dstdg = new node_DanhSachTheDocGia;
+    int array_tdg[MAX_TDG];
+    int arraytdg_size = 0;
     
-    fstream fileInput("data/dausach.txt");
+    node_DanhMucSach* node_dms = new node_DanhMucSach;
     
-    getch();
-    return 0;
+    node_DauSach* node_dausach = new node_DauSach;
+    
+    // Main Program
+    Scene scene = MAIN_MENU;
+    int optionSize = 4;
+    int colorArray[10] = {1, 7, 7, 7, 7, 7, 7, 7, 7, 7};
+    int option = 0; 
+    bool isRunning = true;
+    
+    string ho, ten, phai;
+    
+    
+    while(isRunning){
+        switch (scene)
+        {
+        case MAIN_MENU:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Quan ly thu vien";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1) The Doc Gia";
+		    SetColor(colorArray[1]); gotoxy(20,8);  cout << "2) Dau Sach";
+		    SetColor(colorArray[2]); gotoxy(20,9);  cout << "3) Danh Sach Muon Tra";
+		    SetColor(colorArray[3]); gotoxy(20,10); cout << "Thoat chuong trinh";
+            break;
+        case DOC_GIA:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them, xoa, sua the doc gia";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. In danh sach the doc gia";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Quay tro lai";
+            break;
+        case DOC_GIA_PERSONAL:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xoa";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Sua";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
+            break;
+        case DOC_GIA_PERSONAL_ADD:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Tao moi the doc gia";
+            // Field
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "Ho";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "Ten";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "Phai";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "Luu";
+            
+            // Value input
+            SetColor(colorArray[0]); gotoxy(30,7);  cout << ho;
+            SetColor(colorArray[1]); gotoxy(30,8);  cout << ten;
+            SetColor(colorArray[2]); gotoxy(30,9);  cout << phai;
+            break;
+        case DOC_GIA_PERSONAL_ADJUST:
+            clrscr();
+            
+            break;
+        case DOC_GIA_PERSONAL_REMOVE:
+            clrscr();
+            
+            break;
+        case DAU_SACH:
+            break;
+        
+        default:
+            break;
+        }
+        system("pause>nul");
+        
+        
+        if(GetAsyncKeyState(VK_DOWN) && option < optionSize){
+            option++;
+            for(int i = 0; i < optionSize; i++) colorArray[i] = 7;
+            colorArray[option] = 1;
+            continue;     
+            
+		}
+			
+		if(GetAsyncKeyState(VK_UP) && option > 0){
+            option--;
+            for(int i = 0; i < optionSize; i++) colorArray[i] = 7;
+            colorArray[option] = 1;
+            continue;
+		}
+        
+        if(GetAsyncKeyState(VK_RETURN)){
+            // Main menu
+            switch (scene)
+            {
+            case MAIN_MENU:
+                if(option == 0){
+                    scene = DOC_GIA;
+                    optionSize = 3;
+                    option = 0;                    
+                    resetcolorarray(colorArray, optionSize);
+                }
+                if(option == 1)scene = DAU_SACH;
+                if(option == 2)scene = MUON_TRA;
+                if(option == 3) return 0;
+                break;
+            case DOC_GIA:
+                if(option == 0){
+                    scene = DOC_GIA_PERSONAL;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
+                }
+                if(option == 1){
+                    scene = DOC_GIA_LIST;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
+                }
+                if(option == 2){
+                    scene = MAIN_MENU;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
+                }
+                break;
+            case DOC_GIA_PERSONAL:
+                if(option == 0){
+                    scene = DOC_GIA_PERSONAL_ADD;
+                    option =0;
+                    resetcolorarray(colorArray, optionSize);
+                    optionSize = 4;
+                }
+                if(option == 1){
+                    scene = DOC_GIA_PERSONAL_ADJUST;
+                }
+                if(option == 2){
+                    scene = DOC_GIA_PERSONAL_REMOVE;
+                }
+                break;
+            case DOC_GIA_PERSONAL_ADD:
+                if(option == 0){
+                    SetColor(2);
+                    gotoxy(20, 11);
+                    cout << "Nhap ho:  ";
+                    fflush(stdin);
+                    getline(cin, ho);
+                }
+                if(option == 1){
+                    SetColor(2);
+                    gotoxy(20, 11);
+                    cout << "Nhap ten:  ";
+                    fflush(stdin);
+                    cin >> ten;
+                }
+                if(option ==2){
+                    gotoxy(20, 12); cout <<"LUU Y:: Phai nhap 1 trong 2 nam hoac nu !!";
+                    SetColor(2);gotoxy(20, 11);cout << "Nhap gioi tinh:  ";cin >> phai;
+                }
+                if(option == 3){
+                    SetColor(2);
+                    gotoxy(20, 11);
+                    cout << "Tao moi the doc gia??? y/n";
+                    char ans;
+                    ans = getch();
+                    if(ans == 'y'){
+                        gotoxy(20, 12); cout <<"DONE!!";
+                    }
+                    else if(ans == 'n'){
+                        ho = "";
+                        ten = "";
+                        phai = "";
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
 }

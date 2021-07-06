@@ -7,6 +7,11 @@ using namespace std;
 
 // Danh mục sách, danh sách liên kết đơn
 
+struct Date{
+	int day, month, year;
+};
+const int dateOfMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
 enum TrangThaiSach{
     CHO_MUON_DUOC,
     DA_DUOC_MUON,
@@ -65,10 +70,6 @@ struct node_DanhSachMuonTra{
     node_DanhSachMuonTra* next;
 };
 
-struct Date{
-	int day, month, year;
-};
-const int dateOfMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 // Đầu sách, danh sách tuyến tính
 

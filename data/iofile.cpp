@@ -146,41 +146,41 @@ void WriteBookData(fstream& fileInput, node_DauSach* node_dausach){
 }
 }
 
-int main(){
-    // node_DanhSachTheDocGia* root = NULL;
-    // int arrayID[100];
-    // int size = 0;
-    // fstream fileInput("tdg.txt");
-    // the_doc_gia::ReadArrayID(fileInput, arrayID, size);
-    // the_doc_gia::ReadTheDocGia(fileInput, root, size);
-    // the_doc_gia::PrintDSTDG(root);
-    // fileInput.close();
+// int main(){
+//     // node_DanhSachTheDocGia* root = NULL;
+//     // int arrayID[100];
+//     // int size = 0;
+//     // fstream fileInput("tdg.txt");
+//     // the_doc_gia::ReadArrayID(fileInput, arrayID, size);
+//     // the_doc_gia::ReadTheDocGia(fileInput, root, size);
+//     // the_doc_gia::PrintDSTDG(root);
+//     // fileInput.close();
     
-    node_DanhMucSach* node_dms = NULL;
-    node_DauSach* node_dausach = new node_DauSach;
+//     node_DanhMucSach* node_dms = NULL;
+//     node_DauSach* node_dausach = new node_DauSach;
     
-    int arrayDMS[100];
-    int arraysize = 0;
+//     int arrayDMS[100];
+//     int arraysize = 0;
     
-    // Create DMS and add to it
+//     // Create DMS and add to it
     
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, "tu 3 ke 2", arrayDMS, arraysize);
-    //     node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
-    //     DauSach* dausach = new DauSach;
-    //     *dausach = dau_sach::Create(12412, "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
-    //     dau_sach::AddBook(dausach, node_dausach);
-    // }
+//     // for (int i = 0; i < 10; i++)
+//     // {
+//     //     DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, "tu 3 ke 2", arrayDMS, arraysize);
+//     //     node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
+//     //     DauSach* dausach = new DauSach;
+//     //     *dausach = dau_sach::Create(12412, "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
+//     //     dau_sach::AddBook(dausach, node_dausach);
+//     // }
     
-    fstream fileInput("dausach.txt");
+//     fstream fileInput("dausach.txt");
     
-    // dau_sach::WriteArrayDMS(fileInput, arrayDMS, arraysize);
-    // dau_sach::WriteBookData(fileInput, node_dausach);
+//     // dau_sach::WriteArrayDMS(fileInput, arrayDMS, arraysize);
+//     // dau_sach::WriteBookData(fileInput, node_dausach);
     
-    dau_sach::ReadArrayID(fileInput, arrayDMS, arraysize);
-    dau_sach::ReadBookData(fileInput, node_dms, node_dausach, arraysize, arrayDMS);
+//     dau_sach::ReadArrayID(fileInput, arrayDMS, arraysize);
+//     dau_sach::ReadBookData(fileInput, node_dms, node_dausach, arraysize, arrayDMS);
     
-    fileInput.close();
-    return 0;
-}
+//     fileInput.close();
+//     return 0;
+// }
