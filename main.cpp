@@ -19,10 +19,26 @@ enum Scene{
     DOC_GIA_PERSONAL_REMOVE,
     DOC_GIA_PERSONAL_ADJUST,
     DOC_GIA_LIST,
-    DOC_GIA_LIST_PRINT,
-    DOC_GIA_LIST_IMPORT,
-    DOC_GIA_LIST_OUTPORT,
+    DOC_GIA_LIST_PRINT
 };
+
+void PrintDocGiaList(node_DanhSachTheDocGia* root){
+    if(root != NULL){
+        // gotoxy(10, 7); cout << "Ma the";
+        // gotoxy(20, 7); cout << "Ho";
+        // gotoxy(70, 7); cout << "Ten";
+        // gotoxy(80, 7); cout << "Phai";
+        // gotoxy(90, 7); cout << "Trang thai the";
+        cout << root->data.maThe << "-- " << root->data.ho << "--" << root->data.ten << "--" << root->data.phai << "--" << root->data.trangThaiThe << endl;
+        
+        
+        PrintDocGiaList(root->left);
+        PrintDocGiaList(root->right);
+    }else{
+        // cout << "vao``" << endl;
+    }
+}
+
 void resetcolorarray(int arr[], int size){
     for (int i = 1; i < size; i++)
     {
@@ -35,13 +51,16 @@ int main(){
     // Console setup
     SetWindowSize(160, 90);
     // Data initialization
+    // Doc gia
     node_DanhSachTheDocGia* node_dstdg = NULL;
     int array_tdg[MAX_TDG];
     int arraytdg_size = 0;
+    string ho, ten, phai;
+    fstream file_dausach("data/tdg.txt");
     
-    node_DanhMucSach* node_dms = new node_DanhMucSach;
     
     node_DauSach* node_dausach = new node_DauSach;
+    node_DanhMucSach* node_dms = new node_DanhMucSach;
     
     // Main Program
     Scene scene = MAIN_MENU;
@@ -49,9 +68,6 @@ int main(){
     int colorArray[10] = {1, 7, 7, 7, 7, 7, 7, 7, 7, 7};
     int option = 0; 
     bool isRunning = true;
-    
-    // Doc gia
-    string ho, ten, phai;
     
     
     while(isRunning){
@@ -97,7 +113,7 @@ int main(){
             break;
         case DOC_GIA_PERSONAL_ADJUST:
             clrscr();
-            
+            PrintDocGiaList(node_dstdg);
             break;
         case DOC_GIA_PERSONAL_REMOVE:
             clrscr();
@@ -111,7 +127,10 @@ int main(){
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat danh sach the doc gia tu file";
             SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
             break;
-        
+        case DOC_GIA_LIST_PRINT:
+            clrscr();
+            PrintDocGiaList(node_dstdg);
+            break;
         default:
             break;
         }
@@ -181,25 +200,31 @@ int main(){
                 if(option == 2){
                     scene = DOC_GIA_PERSONAL_REMOVE;
                 }
+                if(option == 3){
+                    scene = DOC_GIA;
+                    optionSize = 3;
+                    option = 0;                    
+                    resetcolorarray(colorArray, optionSize);
+                }
                 break;
             case DOC_GIA_PERSONAL_ADD:
                 if(option == 0){
                     SetColor(2);
-                    gotoxy(20, 11);
+                    gotoxy(20, 12);
                     cout << "Nhap ho:  ";
                     fflush(stdin);
                     getline(cin, ho);
                 }
                 if(option == 1){
                     SetColor(2);
-                    gotoxy(20, 11);
+                    gotoxy(20, 12);
                     cout << "Nhap ten:  ";
                     fflush(stdin);
                     cin >> ten;
                 }
                 if(option ==2){
-                    gotoxy(20, 12); cout <<"LUU Y:: Phai nhap 1 trong 2 nam hoac nu !!";
-                    SetColor(2);gotoxy(20, 11);cout << "Nhap gioi tinh:  ";cin >> phai;
+                    gotoxy(20, 13); cout <<"LUU Y:: Phai nhap 1 trong 2 nam hoac nu !!";
+                    SetColor(2);gotoxy(20, 12);cout << "Nhap gioi tinh:  ";cin >> phai;
                 }
                 if(option == 3){
                     SetColor(2);
@@ -208,13 +233,15 @@ int main(){
                     char ans;
                     ans = getch();
                     if(ans == 'y'){
-                        gotoxy(20, 12); cout <<"CHECKING";
                         if(check_tdg(ho, ten, phai)){
                             TheDocGia newTDG = the_doc_gia::Create(ho, ten, phai, array_tdg, arraytdg_size);
                             the_doc_gia::Insert(node_dstdg, newTDG);
-                            cout << "Thanh cong";
+                            gotoxy(20, 14);
+                            cout << "Thanh cong, bam phim bat ky de tiep tuc";
+                            getch();
                         }
                         else{
+                            gotoxy(20, 14);
                             cout << "That bai, vui long kiem tra lai du lieu nhap, bam phim bat ky de tiep tuc";
                             getch();
                         }
@@ -241,13 +268,27 @@ int main(){
                     resetcolorarray(colorArray, optionSize);
                 }
                 if(option == 1){
-                    
+                    the_doc_gia::ReadArrayID(file_dausach, array_tdg, arraytdg_size);
+                    the_doc_gia::ReadTheDocGia(file_dausach, node_dstdg, arraytdg_size);
+                    gotoxy(20, 12); cout << "Thanh cong! nhan phim bat ki de tiep tuc";
+                    getch();
                 }
                 if(option == 2){
                     
                 }
                 if(option == 3){
-                    
+                    scene = DOC_GIA;
+                    optionSize = 3;
+                    option = 0;                    
+                    resetcolorarray(colorArray, optionSize);
+                }
+            break;
+            case DOC_GIA_LIST_PRINT:
+                if(option == 0){
+                    scene = DOC_GIA_LIST;
+                    optionSize = 4;
+                    option = 0;
+                    resetcolorarray(colorArray, optionSize);
                 }
             break;
             default:
