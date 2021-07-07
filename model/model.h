@@ -335,34 +335,34 @@ namespace dau_sach{
             return SUCCESS;
         }
     }
-    void sortTheLoai(DauSach *data, string theloai){
-    for(i=1; i<MAX_DAU_SACH; i++)
-    {
-        for(j=1; j<MAX_DAU_SACH; j++)
-        {
-            if(strcmp(data[j-1], data[j])>0)
-            {
-                strcpy(theloai, data[j-1]);
-                strcpy(data[j-1], data[j]);
-                strcpy(data[j], theloai);
-            }
-        }
-    }
-}
-void sortTenSach(DauSach *data, string tensach){
-    for(i=1; i<MAX_DAU_SACH; i++)
-    {
-        for(j=1; j<MAX_DAU_SACH; j++)
-        {
-            if(strcmp(data[j-1], data[j])>0)
-            {
-                strcpy(tensach, data[j-1]);
-                strcpy(data[j-1], data[j]);
-                strcpy(data[j], tensach);
-            }
-        }
-    }
-}
+//     void sortTheLoai(DauSach *data, string theloai){
+//     for(i=1; i<MAX_DAU_SACH; i++)
+//     {
+//         for(j=1; j<MAX_DAU_SACH; j++)
+//         {
+//             if(strcmp(data[j-1], data[j])>0)
+//             {
+//                 strcpy(theloai, data[j-1]);
+//                 strcpy(data[j-1], data[j]);
+//                 strcpy(data[j], theloai);
+//             }
+//         }
+//     }
+// }
+// void sortTenSach(DauSach *data, string tensach){
+//     for(i=1; i<MAX_DAU_SACH; i++)
+//     {
+//         for(j=1; j<MAX_DAU_SACH; j++)
+//         {
+//             if(strcmp(data[j-1], data[j])>0)
+//             {
+//                 strcpy(tensach, data[j-1]);
+//                 strcpy(data[j-1], data[j]);
+//                 strcpy(data[j], tensach);
+//             }
+//         }
+//     }
+// }
 }
 
 namespace danh_sach_muon_tra{

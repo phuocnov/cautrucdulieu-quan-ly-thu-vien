@@ -4,22 +4,24 @@
 #include <fstream>
 
 #include "errorcheck.cpp"
-#include "Scene/consolehandle.cpp"
 using namespace std;
 
 #define MAX_TDG 100
+#define MAX_DAUSACH 100
 
 enum Scene{
     MAIN_MENU,
     DOC_GIA,
-    DAU_SACH,
     MUON_TRA,
     DOC_GIA_PERSONAL,
     DOC_GIA_PERSONAL_ADD,
     DOC_GIA_PERSONAL_REMOVE,
     DOC_GIA_PERSONAL_ADJUST,
     DOC_GIA_LIST,
-    DOC_GIA_LIST_PRINT
+    DOC_GIA_LIST_PRINT,
+    DAU_SACH,
+    DAU_SACH_ADD,
+    DAU_SACH_LIST
 };
 
 // Main Program
@@ -86,6 +88,26 @@ void nav_docgia_list(){
     resetcolorarray(colorArray, optionSize);
 }
 
+void nav_docgia_list_print(){
+    scene = DOC_GIA_LIST_PRINT;
+    optionSize = 4;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+
+void nav_dausach(){
+    scene = DAU_SACH;
+    optionSize = 5;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+void nav_dausach_add(){
+    scene = DAU_SACH_ADD;
+    optionSize = 9;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+
 void PrintDocGiaList(node_DanhSachTheDocGia* root){
     if(root != NULL){
         cout << root->data.maThe << "-- " << root->data.ho << "--" << root->data.ten << "--" << root->data.phai << "--" << root->data.trangThaiThe << endl;
@@ -93,24 +115,34 @@ void PrintDocGiaList(node_DanhSachTheDocGia* root){
         PrintDocGiaList(root->right);
     }
 }
+void resetDauSach(DauSach& ds, string pos){
+    ds.ISBN = 0;
+    ds.tenSach="";
+    ds.soTrang=0;
+    ds.tacGia="";
+    ds.namXuatBan=0;
+    ds.theLoai="";
+    pos ="";
+}
 
 int main(){
     // Console setup
     SetWindowSize(160, 90);
     // Data initialization
-    // Doc gia
     node_DanhSachTheDocGia* node_dstdg = NULL;
     int array_tdg[MAX_TDG];
     int arraytdg_size = 0;
     string ho, ten, phai;
     int IDsearch;
     node_DanhSachTheDocGia* search_result = NULL;
-    
+
     node_DauSach* node_dausach = new node_DauSach;
     node_DanhMucSach* node_dms = new node_DanhMucSach;
-    
-    
-    
+    int arrayDMS[MAX_DAUSACH];
+    int arraydms_size = 0;
+    int isbn, sotrang, namxuatban = 0;
+    string tensach, tacgia, theloai, viatri;
+
     
     while(isRunning){
         switch (scene)
@@ -122,14 +154,14 @@ int main(){
 		    SetColor(colorArray[1]); gotoxy(20,8);  cout << "2) Dau Sach";
 		    SetColor(colorArray[2]); gotoxy(20,9);  cout << "3) Danh Sach Muon Tra";
 		    SetColor(colorArray[3]); gotoxy(20,10); cout << "Thoat chuong trinh";
-            break;
+        break;
         case DOC_GIA:
             clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them, xoa, sua the doc gia";
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. In danh sach the doc gia";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Quay tro lai";
-            break;
+        break;
         case DOC_GIA_PERSONAL:
             clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
@@ -137,7 +169,7 @@ int main(){
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xoa";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Sua";
             SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
-            break;
+        break;
         case DOC_GIA_PERSONAL_ADD:
             clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Tao moi the doc gia";
@@ -152,7 +184,7 @@ int main(){
             SetColor(colorArray[0]); gotoxy(30,7);  cout << ho;
             SetColor(colorArray[1]); gotoxy(30,8);  cout << ten;
             SetColor(colorArray[2]); gotoxy(30,9);  cout << phai;
-            break;
+        break;
         case DOC_GIA_PERSONAL_ADJUST:
             clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Chinh sua the doc gia";
@@ -182,11 +214,36 @@ int main(){
                 }
                 continue;
             }
-            break;
+        break;
         case DOC_GIA_PERSONAL_REMOVE:
             clrscr();
-            
-            break;
+            SetColor(6); gotoxy(30, 3); cout << "Xoa sua the doc gia";
+             if(search_result != NULL){
+                SetColor(7); gotoxy(20,7);  cout << "Ma the";
+                SetColor(7); gotoxy(20,8);  cout << "Ho";
+                SetColor(7); gotoxy(20,9);  cout << "Ten";
+                SetColor(7); gotoxy(20,10);  cout << "Phai";
+                SetColor(colorArray[0]); gotoxy(20,11);  cout << "Xoa";
+                SetColor(colorArray[1]); gotoxy(20,12);  cout << "Huy";
+                
+                SetColor(7); gotoxy(30,7);  cout << search_result->data.maThe;
+                SetColor(7); gotoxy(30,8);  cout << search_result->data.ho;
+                SetColor(7); gotoxy(30,9);  cout << search_result->data.ten;
+                SetColor(7); gotoxy(30,10);  cout << search_result->data.phai;
+            }
+            else{
+                SetColor(6); gotoxy(20, 4); cout << "Nhap ID doc gia"; cin >> IDsearch;
+                search_result = the_doc_gia::IDSearch(node_dstdg, IDsearch, array_tdg, arraytdg_size);
+                if(search_result == NULL){
+                    SetColor(7);
+                    gotoxy(20, 5);
+                    cout << "ID khong ton tai, nhan phim bat ky de tiep tuc";
+                    getch();
+                    nav_docgia_personal();
+                }
+                continue;
+            }
+        break;
         case DOC_GIA_LIST:
             clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Quan ly danh sach doc gia";
@@ -194,11 +251,45 @@ int main(){
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Nhap danh sach the doc gia tu file";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat danh sach the doc gia tu file";
             SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
-            break;
+        break;
         case DOC_GIA_LIST_PRINT:
             clrscr();
             PrintDocGiaList(node_dstdg);
-            break;
+        break;
+        
+        case DAU_SACH:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Quan ly dau sach";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them sach";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xuat ra danh sach";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Nhap danh sach the doc gia tu file";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Xuat danh sach the doc gia tu file";
+            SetColor(colorArray[4]); gotoxy(20,11);  cout << "5. Quay tro lai";
+        break;
+        case DAU_SACH_ADD: 
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Them dau sach";
+            
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "ISBN:";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "Ten sach:";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "So trang:";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "Tac gia:";
+            SetColor(colorArray[4]); gotoxy(20,11);  cout << "Nam xuat ban;";
+            SetColor(colorArray[5]); gotoxy(20,12);  cout << "The loai;";
+            SetColor(colorArray[6]); gotoxy(20,13);  cout << "Via tri;";
+            SetColor(colorArray[7]); gotoxy(20,14);  cout << "Luu";
+            SetColor(colorArray[8]); gotoxy(20,15);  cout << "Thoat";
+            
+            
+            // Value input
+            SetColor(colorArray[0]); gotoxy(30,7);  cout << isbn;
+            SetColor(colorArray[1]); gotoxy(30,8);  cout << tensach;
+            SetColor(colorArray[2]); gotoxy(30,9);  cout << sotrang;
+            SetColor(colorArray[3]); gotoxy(30,10);  cout << tacgia;
+            SetColor(colorArray[4]); gotoxy(30,11);  cout << namxuatban;
+            SetColor(colorArray[5]); gotoxy(30,12);  cout << theloai;
+            SetColor(colorArray[6]); gotoxy(30,13);  cout << viatri;
+        break;
         default:
             break;
         }
@@ -210,7 +301,6 @@ int main(){
             for(int i = 0; i < optionSize; i++) colorArray[i] = 7;
             colorArray[option] = 1;
             continue;     
-            
 		}
 			
 		if(GetAsyncKeyState(VK_UP) && option > 0){
@@ -228,7 +318,7 @@ int main(){
                 if(option == 0){
                     nav_docgia();
                 }
-                if(option == 1)scene = DAU_SACH;
+                if(option == 1)nav_dausach();
                 if(option == 2)scene = MUON_TRA;
                 if(option == 3) return 0;
                 break;
@@ -254,10 +344,7 @@ int main(){
                     nav_docgia_personal_adjust();
                 }
                 if(option == 3){
-                    scene = DOC_GIA;
-                    optionSize = 3;
-                    option = 0;                    
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia();
                 }
                 break;
             case DOC_GIA_PERSONAL_ADD:
@@ -314,7 +401,8 @@ int main(){
             case DOC_GIA_PERSONAL_ADJUST:
                 if(search_result && option == 1){
                     SetColor(colorArray[0]); gotoxy(20,12);  cout << "Nhap thay doi: ";
-                    cin >> ho;
+                    fflush(stdin);
+                    getline(cin, ho);
                 }
                 if(search_result && option == 2){
                     SetColor(colorArray[0]); gotoxy(20,12);  cout << "Nhap thay doi: ";
@@ -334,7 +422,6 @@ int main(){
                         ho="";
                         ten="";
                         phai="";
-                        
                         nav_docgia_personal();
                     }
                 }
@@ -342,13 +429,20 @@ int main(){
                     nav_docgia_personal();
                 }
             break;
+            
+            case DOC_GIA_PERSONAL_REMOVE:
+                if(option == 0 && search_result != NULL){
+                    the_doc_gia::Delete(node_dstdg, search_result->data, array_tdg, arraytdg_size);
+                    gotoxy(20, 12); cout << "Thanh cong! nhan phim bat ki de tiep tuc";
+                    nav_docgia();
+                    getch();
+                }
+                if(option == 1) nav_docgia_personal();
+            break;
                 
             case DOC_GIA_LIST:
                 if(option == 0){
-                    scene = DOC_GIA_LIST_PRINT;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia_list_print();
                 }
                 if(option == 1){
                     fstream file_tdg("data/tdg.txt");
@@ -369,13 +463,55 @@ int main(){
                 }
             break;
             case DOC_GIA_LIST_PRINT:
-                if(option == 0){
-                    scene = DOC_GIA_LIST;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
-                }
+                nav_docgia_list();
             break;
+            case DAU_SACH:
+                if(option == 0){
+                    nav_dausach_add();
+                }
+                if(option == 1){
+                    
+                }
+                if(option == 2){
+                    
+                }
+                if(option == 3){
+                    
+                }
+                if(option == 4) nav_mainmenu();
+            break;
+            case DAU_SACH_ADD:
+                if(option == 0){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap ISBN: "; cin >>isbn;
+                }
+                if(option == 1){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap ten sach: "; getline(cin,tensach);
+                }
+                if(option == 2){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap so trang: "; cin >> sotrang;
+                }
+                if(option == 3){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap tac gia "; getline(cin, tacgia);
+                }
+                if(option == 4){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap nam xuat ban "; cin >> namxuatban;
+                }
+                if(option == 5){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap the loai"; getline(cin, theloai);
+                }
+                if(option == 6){
+                    SetColor(3);gotoxy(20, 17);cout << "Nhap via tri"; getline(cin,viatri);
+                }
+                if(option == 7){
+                    if(check_book(isbn, tensach, sotrang, tacgia, namxuatban, theloai, viatri)){
+                        SetColor(3);gotoxy(20, 17);cout << "Dit me may";
+                        getch();
+                    }
+                }
+                if(option == 8){
+                    nav_dausach();
+                }
+                break;
             default:
                 break;
             }
