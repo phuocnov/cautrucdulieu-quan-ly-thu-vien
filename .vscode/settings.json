@@ -7,5 +7,5 @@
         "iosfwd": "cpp",
         "istream": "cpp",
         "ostream": "cpp"
-    }
+    },
 }

@@ -161,6 +161,82 @@ namespace the_doc_gia{
         removeIDarray(value.maThe, arrayID, arrayIDlength);
         return root;
     }
+
+<<<<<<< HEAD
+    ModeDocGia mode;
+=======
+    // TheDocGia *nodes[MAX_RANGE];
+    // int n;
+    // void Reset(){
+    //     n = 0;
+    // }
+    ModeDocGia mode;
+    
+
+>>>>>>> 1bf4a8ffaeb7c37888a581f8fe699859327996ce
+    void LNR(node_DanhSachTheDocGia* &node, TheDocGia *nodes[MAX_RANGE], int n){
+        if (node == NULL)   return;
+        LNR(node->left, nodes, n);
+        nodes[n++] = &node->data;
+        LNR(node->right, nodes, n);
+    }
+
+    void getAllDocGia(node_DanhSachTheDocGia* &docGia, TheDocGia *nodes[MAX_RANGE], int n){
+        n = 0;
+        LNR(docGia, nodes, n);
+        mode = MODE_MA_THE;
+    }
+
+    int compareDG(TheDocGia *a, TheDocGia *b){
+        if (mode == MODE_MA_THE)
+            return a->maThe - b->maThe;
+        else if (mode == MODE_TEN)
+            if (a->ten == b->ten){
+                if (a->ho == b->ho)  return 0;
+                else if (a->ho > b->ho) return 1;
+                else    return -1;
+            }
+            else{
+                if (a->ten == b->ten)    return 0;
+                else if (a->ten > b->ten)   return 1;
+                else    return -1;
+            }
+            return 0;
+    }
+
+    void Partition(int low, int high, TheDocGia *nodes[MAX_RANGE]){
+        int i = low, j = high;
+        TheDocGia *pivot = nodes[(low + high) / 2];
+        TheDocGia *temp;
+        
+        do{
+            while (compareDG(nodes[i], pivot) < 0) i++;
+            while (compareDG(nodes[j], pivot) > 0) j--;
+            if (i <= j){
+                temp = nodes[i];
+                nodes[i] = nodes[j];
+                nodes[j] = temp;
+                i++; j--;
+            }
+        } while (i <= j);
+
+        if (low < j)    Partition(low, j, nodes);
+        if (high > i)   Partition(i, high, nodes);
+    }
+
+    void SortMaTheDocGia(TheDocGia *nodes[MAX_RANGE], int n){
+        if (mode != MODE_MA_THE && n > 0){
+            mode = MODE_MA_THE;
+            Partition(0, n-1, nodes);
+        }
+    }
+
+    void SortTenDocGia(TheDocGia *nodes[MAX_RANGE], int n){
+        if (mode != MODE_TEN && n > 0){
+            mode = MODE_TEN;
+            Partition(0, n-1, nodes);
+        }
+    }
 }
 
 
