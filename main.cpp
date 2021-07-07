@@ -22,29 +22,76 @@ enum Scene{
     DOC_GIA_LIST_PRINT
 };
 
-void PrintDocGiaList(node_DanhSachTheDocGia* root){
-    if(root != NULL){
-        // gotoxy(10, 7); cout << "Ma the";
-        // gotoxy(20, 7); cout << "Ho";
-        // gotoxy(70, 7); cout << "Ten";
-        // gotoxy(80, 7); cout << "Phai";
-        // gotoxy(90, 7); cout << "Trang thai the";
-        cout << root->data.maThe << "-- " << root->data.ho << "--" << root->data.ten << "--" << root->data.phai << "--" << root->data.trangThaiThe << endl;
-        
-        
-        PrintDocGiaList(root->left);
-        PrintDocGiaList(root->right);
-    }else{
-        // cout << "vao``" << endl;
-    }
-}
-
+// Main Program
+    Scene scene = MAIN_MENU;
+    int optionSize = 4;
+    int colorArray[10] = {1, 7, 7, 7, 7, 7, 7, 7, 7, 7};
+    int option = 0; 
+    bool isRunning = true;
+    
 void resetcolorarray(int arr[], int size){
     for (int i = 1; i < size; i++)
     {
         arr[i] = 7;
     }
     arr[0] = 1;
+}
+
+// Navigation
+void nav_mainmenu(){
+    scene = MAIN_MENU;
+    optionSize = 4;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+
+void nav_docgia(){
+    scene = DOC_GIA;
+    optionSize = 3;
+    option = 0;                    
+    resetcolorarray(colorArray, optionSize);
+}
+
+void nav_docgia_personal(){
+    scene = DOC_GIA_PERSONAL;
+    optionSize = 4;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+
+void nav_docgia_personal_remove(){
+    scene = DOC_GIA_PERSONAL_REMOVE;
+    option =0;
+    resetcolorarray(colorArray, optionSize);
+    optionSize = 5;
+}
+
+void nav_docgia_personal_add(){
+    scene = DOC_GIA_PERSONAL_ADD;
+    option =0;
+    resetcolorarray(colorArray, optionSize);
+    optionSize = 5;
+}
+void nav_docgia_personal_adjust(){
+    scene = DOC_GIA_PERSONAL_ADJUST;
+    option =0;
+    resetcolorarray(colorArray, optionSize);
+    optionSize = 6;
+}
+
+void nav_docgia_list(){
+    scene = DOC_GIA_LIST;
+    optionSize = 4;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+
+void PrintDocGiaList(node_DanhSachTheDocGia* root){
+    if(root != NULL){
+        cout << root->data.maThe << "-- " << root->data.ho << "--" << root->data.ten << "--" << root->data.phai << "--" << root->data.trangThaiThe << endl;
+        PrintDocGiaList(root->left);
+        PrintDocGiaList(root->right);
+    }
 }
 
 int main(){
@@ -56,17 +103,13 @@ int main(){
     int array_tdg[MAX_TDG];
     int arraytdg_size = 0;
     string ho, ten, phai;
-    
+    int IDsearch;
+    node_DanhSachTheDocGia* search_result = NULL;
     
     node_DauSach* node_dausach = new node_DauSach;
     node_DanhMucSach* node_dms = new node_DanhMucSach;
     
-    // Main Program
-    Scene scene = MAIN_MENU;
-    int optionSize = 4;
-    int colorArray[10] = {1, 7, 7, 7, 7, 7, 7, 7, 7, 7};
-    int option = 0; 
-    bool isRunning = true;
+    
     
     
     while(isRunning){
@@ -112,7 +155,33 @@ int main(){
             break;
         case DOC_GIA_PERSONAL_ADJUST:
             clrscr();
-            PrintDocGiaList(node_dstdg);
+            SetColor(6); gotoxy(30, 3); cout << "Chinh sua the doc gia";
+            
+            if(search_result != NULL){
+                SetColor(colorArray[0]); gotoxy(20,7);  cout << "Ma the";
+                SetColor(colorArray[1]); gotoxy(20,8);  cout << "Ho";
+                SetColor(colorArray[2]); gotoxy(20,9);  cout << "Ten";
+                SetColor(colorArray[3]); gotoxy(20,10);  cout << "Phai";
+                SetColor(colorArray[4]); gotoxy(20,11);  cout << "Luu";
+                SetColor(colorArray[5]); gotoxy(20,12);  cout << "Thoat";
+                
+                SetColor(colorArray[0]); gotoxy(30,7);  cout << search_result->data.maThe;
+                SetColor(colorArray[1]); gotoxy(30,8);  cout << search_result->data.ho;
+                SetColor(colorArray[2]); gotoxy(30,9);  cout << search_result->data.ten;
+                SetColor(colorArray[3]); gotoxy(30,10);  cout << search_result->data.phai;
+            }
+            else{
+                SetColor(6); gotoxy(20, 4); cout << "Nhap ID doc gia"; cin >> IDsearch;
+                search_result = the_doc_gia::IDSearch(node_dstdg, IDsearch, array_tdg, arraytdg_size);
+                if(search_result == NULL){
+                    SetColor(7);
+                    gotoxy(20, 5);
+                    cout << "ID khong ton tai, nhan phim bat ky de tiep tuc";
+                    getch();
+                    nav_docgia_personal();
+                }
+                continue;
+            }
             break;
         case DOC_GIA_PERSONAL_REMOVE:
             clrscr();
@@ -157,10 +226,7 @@ int main(){
             {
             case MAIN_MENU:
                 if(option == 0){
-                    scene = DOC_GIA;
-                    optionSize = 3;
-                    option = 0;                    
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia();
                 }
                 if(option == 1)scene = DAU_SACH;
                 if(option == 2)scene = MUON_TRA;
@@ -168,36 +234,24 @@ int main(){
                 break;
             case DOC_GIA:
                 if(option == 0){
-                    scene = DOC_GIA_PERSONAL;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia_personal();
                 }
                 if(option == 1){
-                    scene = DOC_GIA_LIST;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia_list();
                 }
                 if(option == 2){
-                    scene = MAIN_MENU;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
+                    nav_mainmenu();
                 }
                 break;
             case DOC_GIA_PERSONAL:
                 if(option == 0){
-                    scene = DOC_GIA_PERSONAL_ADD;
-                    option =0;
-                    resetcolorarray(colorArray, optionSize);
-                    optionSize = 5;
+                    nav_docgia_personal_add();
                 }
                 if(option == 1){
-                    scene = DOC_GIA_PERSONAL_ADJUST;
+                    scene = DOC_GIA_PERSONAL_REMOVE;
                 }
                 if(option == 2){
-                    scene = DOC_GIA_PERSONAL_REMOVE;
+                    nav_docgia_personal_adjust();
                 }
                 if(option == 3){
                     scene = DOC_GIA;
@@ -210,24 +264,25 @@ int main(){
                 if(option == 0){
                     SetColor(2);
                     gotoxy(20, 12);
-                    cout << "Nhap ho:  ";
+                    cout << "Nhap ho:";
                     fflush(stdin);
                     getline(cin, ho);
                 }
                 if(option == 1){
                     SetColor(2);
                     gotoxy(20, 12);
-                    cout << "Nhap ten:  ";
+                    cout << "Nhap ten:";
                     fflush(stdin);
                     cin >> ten;
                 }
                 if(option ==2){
                     gotoxy(20, 13); cout <<"LUU Y:: Phai nhap 1 trong 2 nam hoac nu !!";
-                    SetColor(2);gotoxy(20, 12);cout << "Nhap gioi tinh:  ";cin >> phai;
+                    fflush(stdin);
+                    SetColor(2);gotoxy(20, 12);cout << "Nhap gioi tinh:";cin >> phai;
                 }
                 if(option == 3){
                     SetColor(2);
-                    gotoxy(20, 11);
+                    gotoxy(20, 14);
                     cout << "Tao moi the doc gia??? y/n";
                     char ans;
                     ans = getch();
@@ -252,10 +307,39 @@ int main(){
                     }
                 }
                 if(option == 4){
-                    scene = DOC_GIA_PERSONAL;
-                    optionSize = 4;
-                    option = 0;
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia_personal();
+                }
+            break;
+            
+            case DOC_GIA_PERSONAL_ADJUST:
+                if(search_result && option == 1){
+                    SetColor(colorArray[0]); gotoxy(20,12);  cout << "Nhap thay doi: ";
+                    cin >> ho;
+                }
+                if(search_result && option == 2){
+                    SetColor(colorArray[0]); gotoxy(20,12);  cout << "Nhap thay doi: ";
+                    cin >> ten;
+                }
+                if(search_result && option == 3){
+                    SetColor(colorArray[0]); gotoxy(20,12);  cout << "Nhap thay doi: ";
+                    cin >> phai;
+                }
+                if(search_result && option == 4){
+                    SetColor(colorArray[0]); gotoxy(20,12);  cout << "Xac nhan thay doi? y/n";
+                    char ans = getch();
+                    if(ans=='y'){
+                        the_doc_gia::Edit(search_result, ho, ten, phai);
+                        SetColor(colorArray[0]); gotoxy(20,13);  cout << "Thanh cong";
+                        search_result = NULL;
+                        ho="";
+                        ten="";
+                        phai="";
+                        
+                        nav_docgia_personal();
+                    }
+                }
+                if(search_result && option == 5){
+                    nav_docgia_personal();
                 }
             break;
                 
@@ -281,10 +365,7 @@ int main(){
                     getch();
                 }
                 if(option == 3){
-                    scene = DOC_GIA;
-                    optionSize = 3;
-                    option = 0;                    
-                    resetcolorarray(colorArray, optionSize);
+                    nav_docgia();
                 }
             break;
             case DOC_GIA_LIST_PRINT:
