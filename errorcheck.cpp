@@ -26,6 +26,22 @@ bool checkString_num(string str){
     return temp;
 }
 
+bool checkString_num_only(string str){
+    bool temp;
+    if(str.length() != 14) return false;
+    else{
+        for(int i = 0; i < str.length(); i++){
+            if(str[i] >= '0' && str[i] <='9')
+                temp = true;
+            else {
+                temp = false;
+                break;
+            }
+        }
+        return temp;
+    }
+}
+
 bool checkWord_nonum(string str){
     bool temp;
     for(int i = 0; i < str.length(); i++){
@@ -56,8 +72,8 @@ bool check_tdg(string ho, string ten, string phai){
     }
 }
 
-bool check_book(int isbn, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, string viatri){
-    bool check_isbn = (isbn > 10000000000000 && isbn < 99999999999999);
+bool check_book(string isbn, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, string viatri){
+    bool check_isbn = checkString_num_only(isbn);
     bool check_tensach = checkString_num(tensach);
     bool check_tacgia = checkString_nonum(tacgia);
     bool check_viatri = checkString_num(viatri);
@@ -80,4 +96,5 @@ bool check_book(int isbn, string tensach, int sotrang, string tacgia, int namxua
     }
     cout << "Nhan phim bat ky de tiep tuc"<< endl;
     getchar();
+    return (check_isbn && check_tensach && check_tacgia && check_viatri && check_nxb);
 }

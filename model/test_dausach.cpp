@@ -21,7 +21,7 @@ int main(){
         DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, "tu 3 ke 2", arrayDMS, arraysize);
         node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
         DauSach* dausach = new DauSach;
-        *dausach = dau_sach::Create(12412, "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
+        *dausach = dau_sach::Create("12412", "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
         dau_sach::AddBook(dausach, node_dausach);
     }
     

@@ -283,7 +283,7 @@ namespace dau_sach{
         //     return newllist;
         // }
         else{
-                AddToListBook(dms, llist->next);
+            AddToListBook(dms, llist->next);
             // checkMaSach(*dms, arrayID, length);
         }
     }
@@ -297,7 +297,7 @@ namespace dau_sach{
     }
     
     // Đầu sách
-    DauSach Create(int ISBN, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, node_DanhMucSach* danhMucSach){
+    DauSach Create(string ISBN, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, node_DanhMucSach* danhMucSach){
         DauSach temp;
         temp.ISBN = ISBN;
         temp.tenSach = tensach;
