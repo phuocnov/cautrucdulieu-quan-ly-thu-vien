@@ -123,6 +123,7 @@ void PrintDocGiaList(node_DanhSachTheDocGia* root){
 }
 
 int main(){
+    srand(time(NULL));
     // Console setup
     SetWindowSize(160, 90);
     // Data initialization
@@ -133,12 +134,14 @@ int main(){
     int IDsearch;
     node_DanhSachTheDocGia* search_result = NULL;
 
+    node_DanhMucSach* node_dms = NULL;
     node_DauSach* node_dausach = new node_DauSach;
-    node_DanhMucSach* node_dms = new node_DanhMucSach;
     int arrayDMS[MAX_DAUSACH];
     int arraydms_size = 0;
-    int isbn = 0, sotrang = 0, namxuatban = 0;
-    string tensach, tacgia, theloai, viatri;
+    int sotrang = 0, namxuatban = 0;
+    string tensach, tacgia, theloai, viatri, isbn;
+    DauSach temp_dausach_list[MAX_DAU_SACH];
+    
 
     
     while(isRunning){
@@ -286,8 +289,23 @@ int main(){
             SetColor(colorArray[5]); gotoxy(40,12);  cout << theloai;
             SetColor(colorArray[6]); gotoxy(40,13);  cout << viatri;
         break;
+        case DAU_SACH_LIST:
+            clrscr();
+            {
+                SetColor(6); gotoxy(30, 3); cout << "Danh sach dau sach";
+                for(int i=0; i < arraydms_size; i++){
+                    temp_dausach_list[i] = *node_dausach->node[i];
+                }
+                dau_sach::sortDauSach(temp_dausach_list, arraydms_size);
+                
+                for(int i=0; i < arraydms_size; i++){
+                    SetColor(6); gotoxy(20, 10 + i);
+                    cout << temp_dausach_list[i].ISBN << "--" << temp_dausach_list[i].tenSach<< "--" << temp_dausach_list[i].soTrang << "--" << temp_dausach_list[i].tacGia << "--" << temp_dausach_list[i].namXuatBan << "--" << temp_dausach_list[i].theLoai << "--" << temp_dausach_list[i].dms->dms.maSach << "--" << temp_dausach_list[i].dms->dms.viaTri << temp_dausach_list[i].dms->dms.trangThaiSach << endl;
+                }
+            }
+        break;
         default:
-            break;
+        break;
         }
         system("pause>nul");
         
@@ -512,6 +530,7 @@ int main(){
                         node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
                         DauSach* dausach = new DauSach;
                         *dausach = dau_sach::Create(isbn, tensach, sotrang, tacgia, namxuatban, theloai, bindtobook);
+                        dau_sach::AddBook(dausach, node_dausach);
                         SetColor(3);gotoxy(20, 17);cout << "Thanh cong!!, nhan phim bat ki de tiep tuc";
                         getchar();
                         nav_dausach();

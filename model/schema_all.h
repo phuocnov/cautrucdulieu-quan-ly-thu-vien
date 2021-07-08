@@ -76,7 +76,7 @@ struct node_DanhSachMuonTra{
 // Đầu sách, danh sách tuyến tính
 
 struct DauSach{
-    int ISBN;
+    string ISBN;
     string tenSach;
     int soTrang;
     string tacGia;

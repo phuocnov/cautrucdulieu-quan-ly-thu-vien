@@ -95,28 +95,35 @@ void ReadBookData(fstream& fileInput, node_DanhMucSach* &node_dms, node_DauSach*
     if(fileInput.fail()) cout << "ERROR:: Khong the mo File, vui long kiem tra lai!!" << endl;
     else{
         for (int i = 0; i < size; i++){
-            DauSach dauSach;
-            DanhMucSach* danhmuc = new DanhMucSach;
+            string isbn, tensach, tacgia, theloai, viatri;
+            int sotrang, namxuatban, masach;
+            fileInput.ignore();
+            fileInput >> isbn;
+            fileInput.ignore();
+            getline(fileInput, tensach);
+            fileInput >> sotrang;
+            fileInput.ignore();
+            getline(fileInput, tacgia);
+            fileInput >>namxuatban;
+            fileInput.ignore();
+            getline(fileInput, theloai);
+            fileInput >> masach;
+            fileInput.ignore();
+            getline(fileInput,viatri);
             
-            fileInput >> dauSach.ISBN;
-            fileInput.ignore();
-            getline(fileInput, dauSach.tenSach);
-            fileInput >> dauSach.soTrang;
-            fileInput.ignore();
-            getline(fileInput, dauSach.tacGia);
-            fileInput >>dauSach.namXuatBan;
-            fileInput.ignore();
-            getline(fileInput, dauSach.theLoai);
-            fileInput >> danhmuc->maSach;
-            fileInput.ignore();
-            getline(fileInput, danhmuc->viaTri);
+            // DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, viatri, arrayDMS, size);
+            DanhMucSach* dms = new DanhMucSach;
+            dms->maSach = masach;
+            dms->trangThaiSach = CHO_MUON_DUOC;
+            dms->viaTri = viatri;
+            node_DanhMucSach* bind = dau_sach::AddToListBook(dms, node_dms);
+            DauSach* dausach = new DauSach;
+            *dausach = dau_sach::Create(isbn, tensach, sotrang, tacgia, namxuatban, theloai, bind);
+            dau_sach::AddBook(dausach, node_dausach);
             
-            // DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, danhmuc.viaTri, arrayDMS, size);
-            // node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
-            // DauSach* dausach = new DauSach;
-            // *dausach = dau_sach::Create(ISBN, tensach, soTrang, tacgia, namXuatBan, theLoai, bindtobook);
-            dau_sach::AddToListBook(danhmuc, node_dms);
-            dau_sach::AddBook(&dauSach, node_dausach);
+            
+            // dau_sach::AddToListBook(danhmuc, node_dms);
+            // dau_sach::AddBook(&dauSach, node_dausach);
         }
     }
 }
@@ -169,7 +176,7 @@ void WriteBookData(fstream& fileInput, node_DauSach* node_dausach){
 //     //     DanhMucSach* dms = dau_sach::CreateDMS(CHO_MUON_DUOC, "tu 3 ke 2", arrayDMS, arraysize);
 //     //     node_DanhMucSach* bindtobook = dau_sach::AddToListBook(dms, node_dms);
 //     //     DauSach* dausach = new DauSach;
-//     //     *dausach = dau_sach::Create(12412, "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
+//     //     *dausach = dau_sach::Create("12412", "tenSach", 500, "tacGia", 2012, "theLoai", bindtobook);
 //     //     dau_sach::AddBook(dausach, node_dausach);
 //     // }
     
