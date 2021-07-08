@@ -79,5 +79,5 @@ bool check_book(int isbn, string tensach, int sotrang, string tacgia, int namxua
         cout << "Via tri khong hop le, a-z, A-Z, 0-9" << endl;
     }
     cout << "Nhan phim bat ky de tiep tuc"<< endl;
-    getch();
+    getchar();
 }
