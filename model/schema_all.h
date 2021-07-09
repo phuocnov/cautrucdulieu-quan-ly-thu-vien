@@ -36,8 +36,6 @@ enum TrangThaiThe{
   HOAT_DONG  
 };
 
-enum ModeDocGia{MODE_MA_THE, MODE_TEN};
-
 struct TheDocGia{
     int maThe;
     string ho;

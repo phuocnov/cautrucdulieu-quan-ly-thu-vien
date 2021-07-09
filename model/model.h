@@ -162,7 +162,6 @@ namespace the_doc_gia{
         return root;
     }
 
-    ModeDocGia mode;
     void LNR(node_DanhSachTheDocGia* &node, TheDocGia *nodes[MAX_RANGE], int n){
         if (node == NULL)   return;
         LNR(node->left, nodes, n);
@@ -170,61 +169,36 @@ namespace the_doc_gia{
         LNR(node->right, nodes, n);
     }
 
-    void getAllDocGia(node_DanhSachTheDocGia* &docGia, TheDocGia *nodes[MAX_RANGE], int n){
-        n = 0;
+    void SortDGTheoMaThe(node_DanhSachTheDocGia* &docGia, TheDocGia *nodes[MAX_RANGE], int n){
+        //Duyệt LNR => Mã độc giả tăng dần
         LNR(docGia, nodes, n);
-        mode = MODE_MA_THE;
     }
 
-    int compareDG(TheDocGia *a, TheDocGia *b){
-        if (mode == MODE_MA_THE)
-            return a->maThe - b->maThe;
-        else if (mode == MODE_TEN)
-            if (a->ten == b->ten){
-                if (a->ho == b->ho)  return 0;
-                else if (a->ho > b->ho) return 1;
-                else    return -1;
-            }
-            else{
-                if (a->ten == b->ten)    return 0;
-                else if (a->ten > b->ten)   return 1;
-                else    return -1;
-            }
-            return 0;
+    template <class T>
+    void swap(T &a, T &b){
+        T temp = a;
+        a = b;
+        b = temp;
     }
 
-    void Partition(int low, int high, TheDocGia *nodes[MAX_RANGE]){
+    void SortDGTheoTen(int low, int high, string *&listDG, string *&listName){
         int i = low, j = high;
-        TheDocGia *pivot = nodes[(low + high) / 2];
-        TheDocGia *temp;
-        
-        do{
-            while (compareDG(nodes[i], pivot) < 0) i++;
-            while (compareDG(nodes[j], pivot) > 0) j--;
+        //Lấy phần tử giữa của dãy cần sắp xếp làm mốc
+        string x = listName[(low + high) / 2];
+        do{ //Phân đoạn dãy con a[low],..., a[high]
+            while (listName[i].compare(x) < 0)  i++; //Tìm phần tử đầu tiên có nhỏ hơn hay bằng x
+            while (listName[j].compare(x) > 0)  j--; //Tìm phần tử đầu tiên có lớn hơn hay bằng x
             if (i <= j){
-                temp = nodes[i];
-                nodes[i] = nodes[j];
-                nodes[j] = temp;
+                swap(listName[i], listName[j]);
+                swap(listDG[i], listDG[j]);
                 i++; j--;
             }
         } while (i <= j);
 
-        if (low < j)    Partition(low, j, nodes);
-        if (high > i)   Partition(i, high, nodes);
-    }
-
-    void SortMaTheDocGia(TheDocGia *nodes[MAX_RANGE], int n){
-        if (mode != MODE_MA_THE && n > 0){
-            mode = MODE_MA_THE;
-            Partition(0, n-1, nodes);
-        }
-    }
-
-    void SortTenDocGia(TheDocGia *nodes[MAX_RANGE], int n){
-        if (mode != MODE_TEN && n > 0){
-            mode = MODE_TEN;
-            Partition(0, n-1, nodes);
-        }
+        if (low < j) //Phần thứ nhất có từ 2 phần tử trở lên    
+            SortDGTheoTen(low, j, listDG, listName);
+        if (high > i) //Phần thứ ba có từ 2 phần tử trở lên
+            SortDGTheoTen(i, high, listDG, listName);
     }
 }
 
