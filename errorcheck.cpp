@@ -98,3 +98,20 @@ bool check_book(string isbn, string tensach, int sotrang, string tacgia, int nam
     getchar();
     return (check_isbn && check_tensach && check_tacgia && check_viatri && check_nxb);
 }
+
+bool check_date(int d, int m, int y){
+    bool check_d, check_m, check_y;
+    if(y < 0){
+        cout << "Nam phai la 1 so duong, lon hon 0" << endl;
+        return false;
+    }
+    if(m < 1 && m > 12){
+         cout << "Thang phai la 1 so nguyen tu 1-12" << endl;
+         return false;
+    }
+    if(d < 1 && d > dateOfMonth[m]){
+        cout << "Ngay phai trong khoang 1, " << dateOfMonth[m]<< endl;
+        return false;
+    }
+    return true;
+}

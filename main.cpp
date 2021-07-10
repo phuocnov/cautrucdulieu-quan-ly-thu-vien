@@ -381,14 +381,18 @@ int main(){
             cin >> masach_temp;
             SetColor(7); gotoxy(20,9);  cout << "Nhap ngay/thang/nam muon: ";
             cin >> d >> m >> y;
-            
-            search_result = the_doc_gia::IDSearch(node_dstdg, mathe_temp, array_tdg, arraytdg_size);
-            dausach_searchrs = dau_sach::SearchDauSach(masach_temp, node_dausach);
-            
-            if(search_result != NULL && dausach_searchrs != NULL){
-                danh_sach_muon_tra::MuonSach(node_dsmt, node_rs_size, search_result, masach_temp, d, m, y);
-                cout << "Thanh cong! Nhan phim bat ki de tiep tuc" << endl;
-                getchar();            
+            if(check_date(d,m,y)){
+                search_result = the_doc_gia::IDSearch(node_dstdg, mathe_temp, array_tdg, arraytdg_size);
+                dausach_searchrs = dau_sach::SearchDauSach(masach_temp, node_dausach);
+                
+                if(search_result != NULL && dausach_searchrs != NULL){
+                    danh_sach_muon_tra::MuonSach(node_dsmt, node_rs_size, search_result, masach_temp, d, m, y);
+                    cout << "Thanh cong! Nhan phim bat ki de tiep tuc" << endl;
+                    getchar();            
+                }
+            }
+            else{
+                cout << "Ngay nhap khong hop le" << endl;
             }
             
         break;
@@ -402,12 +406,21 @@ int main(){
             SetColor(7); gotoxy(20,9);  cout << "Nhap ngay/thang/nam tra: ";
             cin >> d >> m >> y;
             
+            Date temp_check;
+            temp_check.day = d;
+            temp_check.month = m;
+            temp_check.year = y;
+            
             search_result = the_doc_gia::IDSearch(node_dstdg, mathe_temp, array_tdg, arraytdg_size);
             dsmt_rs = danh_sach_muon_tra::Findlist(mathe_temp, masach_temp, node_dsmt);
-            if(dsmt_rs != NULL){
+            if(check_date(d,m,y) && danh_sach_muon_tra::getDateDifference(dsmt_rs->data.ngayMuon, temp_check) >0 && dsmt_rs != NULL){
                 danh_sach_muon_tra::TraSach(dsmt_rs, d, m, y, search_result, array_tdg, arraytdg_size);
-                cout << "Thanh cong! Nhan phim bat ki de tiep tuc" << endl;
-                getchar();  
+                cout << "Nhan phim bat ki de tiep tuc" << endl;
+                getchar();
+            }
+            else{
+                cout << "Du lieu nhap sai" << endl;
+                
             }
         }
         break;
