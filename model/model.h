@@ -162,68 +162,88 @@ namespace the_doc_gia{
         return root;
     }
 
-    ModeDocGia mode;
-    void LNR(node_DanhSachTheDocGia* &node, TheDocGia *nodes[MAX_RANGE], int n){
-        if (node == NULL)   return;
-        LNR(node->left, nodes, n);
-        nodes[n++] = &node->data;
-        LNR(node->right, nodes, n);
-    }
+    // ModeDocGia mode;
+    // void LNR(node_DanhSachTheDocGia* &node, TheDocGia *nodes[MAX_RANGE], int n){
+    //     if (node == NULL)   return;
+    //     LNR(node->left, nodes, n);
+    //     nodes[n++] = &node->data;
+    //     LNR(node->right, nodes, n);
+    // }
 
-    void getAllDocGia(node_DanhSachTheDocGia* &docGia, TheDocGia *nodes[MAX_RANGE], int n){
-        n = 0;
-        LNR(docGia, nodes, n);
-        mode = MODE_MA_THE;
-    }
+    // void getAllDocGia(node_DanhSachTheDocGia* &docGia, TheDocGia *nodes[MAX_RANGE], int n){
+    //     n = 0;
+    //     LNR(docGia, nodes, n);
+    //     mode = MODE_MA_THE;
+    // }
 
-    int compareDG(TheDocGia *a, TheDocGia *b){
-        if (mode == MODE_MA_THE)
-            return a->maThe - b->maThe;
-        else if (mode == MODE_TEN)
-            if (a->ten == b->ten){
-                if (a->ho == b->ho)  return 0;
-                else if (a->ho > b->ho) return 1;
-                else    return -1;
-            }
-            else{
-                if (a->ten == b->ten)    return 0;
-                else if (a->ten > b->ten)   return 1;
-                else    return -1;
-            }
-            return 0;
-    }
+    // int compareDG(TheDocGia *a, TheDocGia *b){
+    //     if (mode == MODE_MA_THE)
+    //         return a->maThe - b->maThe;
+    //     else if (mode == MODE_TEN)
+    //         if (a->ten == b->ten){
+    //             if (a->ho == b->ho)  return 0;
+    //             else if (a->ho > b->ho) return 1;
+    //             else    return -1;
+    //         }
+    //         else{
+    //             if (a->ten == b->ten)    return 0;
+    //             else if (a->ten > b->ten)   return 1;
+    //             else    return -1;
+    //         }
+    //         return 0;
+    // }
 
-    void Partition(int low, int high, TheDocGia *nodes[MAX_RANGE]){
-        int i = low, j = high;
-        TheDocGia *pivot = nodes[(low + high) / 2];
-        TheDocGia *temp;
+    // void Partition(int low, int high, TheDocGia *nodes[MAX_RANGE]){
+    //     int i = low, j = high;
+    //     TheDocGia *pivot = nodes[(low + high) / 2];
+    //     TheDocGia *temp;
         
-        do{
-            while (compareDG(nodes[i], pivot) < 0) i++;
-            while (compareDG(nodes[j], pivot) > 0) j--;
-            if (i <= j){
-                temp = nodes[i];
-                nodes[i] = nodes[j];
-                nodes[j] = temp;
-                i++; j--;
-            }
-        } while (i <= j);
+    //     do{
+    //         while (compareDG(nodes[i], pivot) < 0) i++;
+    //         while (compareDG(nodes[j], pivot) > 0) j--;
+    //         if (i <= j){
+    //             temp = nodes[i];
+    //             nodes[i] = nodes[j];
+    //             nodes[j] = temp;
+    //             i++; j--;
+    //         }
+    //     } while (i <= j);
 
-        if (low < j)    Partition(low, j, nodes);
-        if (high > i)   Partition(i, high, nodes);
+    //     if (low < j)    Partition(low, j, nodes);
+    //     if (high > i)   Partition(i, high, nodes);
+    // }
+    
+    void exportTDGtolist(node_DanhSachTheDocGia* root, TheDocGia out[], int &count){
+        if (root != NULL)
+        {
+            out[count] = root->data;
+            count++;
+            exportTDGtolist(root->left, out, count);
+            exportTDGtolist(root->right, out, count);
+        }
     }
-
-    void SortMaTheDocGia(TheDocGia *nodes[MAX_RANGE], int n){
-        if (mode != MODE_MA_THE && n > 0){
-            mode = MODE_MA_THE;
-            Partition(0, n-1, nodes);
+    
+    void swap_docgia(TheDocGia &a, TheDocGia &b){
+        TheDocGia temp = a;
+        a = b;
+        b = temp;
+    }
+    
+    void SortMaTheDocGia(TheDocGia nodes[], int n){
+        for (int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++){
+                if(nodes[i].maThe<nodes[j].maThe) swap_docgia(nodes[i], nodes[j]);
+            }
         }
     }
 
-    void SortTenDocGia(TheDocGia *nodes[MAX_RANGE], int n){
-        if (mode != MODE_TEN && n > 0){
-            mode = MODE_TEN;
-            Partition(0, n-1, nodes);
+    void SortTenDocGia(TheDocGia nodes[], int n){
+        for (int i = 0; i < n; i++)
+        {
+            for(int j =0; j < n; j++){
+                if(nodes[i].ten.compare(nodes[j].ten) < 0) swap_docgia(nodes[i], nodes[j]);
+            }
         }
     }
 }
@@ -296,6 +316,14 @@ namespace dau_sach{
         return NULL;
     }
     
+    DauSach* SearchDauSach(int maSach, node_DauSach* listSach){
+        for (int i = 0; i < listSach->size; i++)
+        {
+            if(listSach->node[i]->dms->dms.maSach == maSach) return listSach->node[i];
+        }
+        return NULL;
+    }
+    
     // Đầu sách
     DauSach Create(string ISBN, string tensach, int sotrang, string tacgia, int namxuatban, string theloai, node_DanhMucSach* danhMucSach){
         DauSach temp;
@@ -358,20 +386,35 @@ namespace dau_sach{
             
         }
     }
+    
+    
 }
 
 namespace danh_sach_muon_tra{
-    void MuonSach(node_DanhSachMuonTra* &dsmt, node_DanhSachTheDocGia* &nguoiMuon, int maSach, int ngay, int thang, int nam){
+    void Add(node_DanhSachMuonTra* node, node_DanhSachMuonTra* &list){
+        if(list == NULL){
+            list = node;
+        }
+        else Add(node, list->next);
+    }
+    
+    void MuonSach(node_DanhSachMuonTra* &dsmt, int &size, node_DanhSachTheDocGia* &nguoiMuon, int maSach, int ngay, int thang, int nam){
         if(nguoiMuon->data.trangThaiThe == HOAT_DONG && nguoiMuon->data.luotMuon > 0){
             DanhSachMuonTra data;
             data.IDnguoimuon = nguoiMuon->data.maThe;
+            data.maSach = maSach;
             data.ngayMuon.day = ngay;
             data.ngayMuon.month = thang;
             data.ngayMuon.year = nam;
             data.trangThaiMuonTra = DANG_MUON;
             nguoiMuon->data.luotMuon--;
-            if(dsmt == NULL)dsmt->data = data;
-            else MuonSach(dsmt->next, nguoiMuon, maSach, ngay, thang, nam);
+            size++;
+            if(dsmt == NULL){
+                dsmt = new node_DanhSachMuonTra;
+                dsmt->data = data;
+                dsmt->next = NULL;
+            }
+            else MuonSach(dsmt->next, size, nguoiMuon, maSach, ngay, thang, nam);
         }
         else if(nguoiMuon->data.trangThaiThe == BI_KHOA){
             cout << "ERROR:: The nay da bi khoa, vui long mo khoa the, ma the: " << nguoiMuon->data.maThe<<endl;
@@ -402,7 +445,12 @@ namespace danh_sach_muon_tra{
         n2 += countLeapYear(pay);
         return (n2 - n1);
     }
-    node_DanhSachMuonTra* listDanhSachMuon(node_DanhSachMuonTra *&dsmt, int ngay, int thang, int nam, node_DanhSachTheDocGia* &dstdg, int ArrayID[], int arrayIDlength){
+    node_DanhSachMuonTra* Findlist(int mathe, int masach, node_DanhSachMuonTra* list){
+        if(list == NULL) return NULL;
+        if(list->data.IDnguoimuon == mathe && list->data.maSach == masach) return list;
+        else Findlist(mathe, masach, list->next);
+    }
+    node_DanhSachMuonTra* TraSach(node_DanhSachMuonTra *&dsmt, int ngay, int thang, int nam, node_DanhSachTheDocGia* &dstdg, int ArrayID[], int arrayIDlength){
         dsmt->data.ngayTra.day = ngay;
         dsmt->data.ngayTra.month = thang;
         dsmt->data.ngayTra.year = nam;
@@ -412,5 +460,16 @@ namespace danh_sach_muon_tra{
         if(getDateDifference(dsmt->data.ngayMuon, dsmt->data.ngayTra) > 7){
             nguoiMuon->data.trangThaiThe = BI_KHOA;
         }
+    }
+    void print(node_DanhSachMuonTra* list){
+        if (list != NULL)
+        {
+            cout << list->data.IDnguoimuon << "--" << list->data.maSach << "--" << list->data.ngayMuon.day << "/" << list->data.ngayMuon.month << "/" << list->data.ngayMuon.year;
+            if(list->data.trangThaiMuonTra == DA_TRA)
+                cout << "Ngay tra: " <<  list->data.ngayTra.day << "/" << list->data.ngayTra.month << "/" << list->data.ngayTra.year;
+            cout << endl;
+            print(list->next);
+        }
+        
     }
 }

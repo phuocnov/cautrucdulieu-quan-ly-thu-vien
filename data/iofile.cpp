@@ -153,6 +153,62 @@ void WriteBookData(fstream& fileInput, node_DauSach* node_dausach){
 }
 }
 
+namespace danh_sach_muon_tra{
+void WriteDsmtData(fstream& file, node_DanhSachMuonTra* node_dsmt){
+    if(node_dsmt != NULL){
+        file << node_dsmt->data.IDnguoimuon << endl;
+        file << node_dsmt->data.maSach << endl;
+        file << node_dsmt->data.trangThaiMuonTra << endl;
+        file << node_dsmt->data.ngayMuon.day << endl;
+        file << node_dsmt->data.ngayMuon.month << endl;
+        file << node_dsmt->data.ngayMuon.year << endl;
+        if(node_dsmt->data.trangThaiMuonTra == DA_TRA){
+            file << node_dsmt->data.ngayTra.day << endl;
+            file << node_dsmt->data.ngayTra.month << endl;
+            file << node_dsmt->data.ngayTra.year << endl;
+        }
+        file << endl;
+        WriteDsmtData(file, node_dsmt->next);
+    }
+}
+void Write(fstream &file, node_DanhSachMuonTra* node_dsmt, int size){
+    file << size;
+    file << endl;
+    WriteDsmtData(file, node_dsmt);
+}
+
+bool isemty(fstream& file){
+    if ( file.peek() == std::ifstream::traits_type::eof()){
+        return true;
+    }
+    else return false;
+}
+void Read(fstream& file, node_DanhSachMuonTra* &node_dsmt, int &size){
+    file >> size;
+    file.ignore();
+    for(int i = 0; i < size; i++){
+        node_DanhSachMuonTra* temp = new node_DanhSachMuonTra;
+        temp->next = NULL;
+        file >> temp->data.IDnguoimuon;
+        file >> temp->data.maSach;
+        int n;
+        file >> n;
+        if(n == 0) temp->data.trangThaiMuonTra = DANG_MUON;
+        if(n == 1) temp->data.trangThaiMuonTra = DA_TRA;
+        file >> temp->data.ngayMuon.day;
+        file >> temp->data.ngayMuon.month;
+        file >> temp->data.ngayMuon.year;
+        if(temp->data.trangThaiMuonTra == DA_TRA){
+            file >> temp->data.ngayTra.day;
+            file >> temp->data.ngayTra.month;
+            file >> temp->data.ngayTra.year;
+        }
+        Add(temp, node_dsmt);
+        file.ignore();
+    }
+}
+}
+
 // int main(){
 //     // node_DanhSachTheDocGia* root = NULL;
 //     // int arrayID[100];

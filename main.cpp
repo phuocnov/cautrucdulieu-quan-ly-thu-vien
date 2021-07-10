@@ -13,7 +13,6 @@ using namespace std;
 enum Scene{
     MAIN_MENU,
     DOC_GIA,
-    MUON_TRA,
     DOC_GIA_PERSONAL,
     DOC_GIA_PERSONAL_ADD,
     DOC_GIA_PERSONAL_REMOVE,
@@ -22,7 +21,12 @@ enum Scene{
     DOC_GIA_LIST_PRINT,
     DAU_SACH,
     DAU_SACH_ADD,
-    DAU_SACH_LIST
+    DAU_SACH_LIST,
+    MUON_TRA,
+    MUON_TRA_M,
+    MUON_TRA_T,
+    MUON_TRA_LIST,
+    MUON_TRA_TOP
 };
 
 // Main Program
@@ -43,7 +47,7 @@ void resetcolorarray(int arr[], int size){
 // Navigation
 void nav_mainmenu(){
     scene = MAIN_MENU;
-    optionSize = 4;
+    optionSize = 6;
     option = 0;
     resetcolorarray(colorArray, optionSize);
 }
@@ -110,9 +114,39 @@ void nav_dausach_add(){
 }
 void nav_dausach_list(){
     scene = DAU_SACH_LIST;
+    optionSize = 2;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+void nav_muontra(){
+    scene = MUON_TRA;
+    optionSize = 5;
+    option = 0;
+    resetcolorarray(colorArray, optionSize);
+}
+void nav_muontra_m(){
+    scene = MUON_TRA_M;
     optionSize = 1;
     option = 0;
     resetcolorarray(colorArray, optionSize);
+}
+void nav_muontra_t(){
+    scene = MUON_TRA_T;
+    optionSize = 1;
+    resetcolorarray(colorArray, optionSize);
+    option = 0;
+}
+void nav_muontra_list(){
+    scene = MUON_TRA_LIST;
+    optionSize = 4;
+    resetcolorarray(colorArray, optionSize);
+    option = 0;
+}
+void nav_muontra_top(){
+    scene = MUON_TRA_T;
+    resetcolorarray(colorArray, optionSize);
+    optionSize = 1;
+    option = 0;
 }
 void PrintDocGiaList(node_DanhSachTheDocGia* root){
     if(root != NULL){
@@ -133,7 +167,7 @@ int main(){
     string ho, ten, phai;
     int IDsearch;
     node_DanhSachTheDocGia* search_result = NULL;
-
+    
     node_DanhMucSach* node_dms = NULL;
     node_DauSach* node_dausach = new node_DauSach;
     int arrayDMS[MAX_DAUSACH];
@@ -141,8 +175,14 @@ int main(){
     int sotrang = 0, namxuatban = 0;
     string tensach, tacgia, theloai, viatri, isbn;
     DauSach temp_dausach_list[MAX_DAU_SACH];
+    int count =0;
     
-
+    node_DanhSachMuonTra* node_dsmt = NULL;
+    int node_rs_size = 0;
+    int mathe_temp = 0, masach_temp = 0;
+    DauSach* dausach_searchrs = NULL;
+    int d,m,y;
+    node_DanhSachMuonTra* dsmt_rs = NULL;
     
     while(isRunning){
         switch (scene)
@@ -153,7 +193,9 @@ int main(){
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1) The Doc Gia";
 		    SetColor(colorArray[1]); gotoxy(20,8);  cout << "2) Dau Sach";
 		    SetColor(colorArray[2]); gotoxy(20,9);  cout << "3) Danh Sach Muon Tra";
-		    SetColor(colorArray[3]); gotoxy(20,10); cout << "Thoat chuong trinh";
+		    SetColor(colorArray[3]); gotoxy(20,10); cout << "4) Load data";
+		    SetColor(colorArray[4]); gotoxy(20,11); cout << "5) Save data";
+		    SetColor(colorArray[5]); gotoxy(20,12); cout << "6) Thoat chuong trinh";
         break;
         case DOC_GIA:
             clrscr();
@@ -254,7 +296,9 @@ int main(){
         break;
         case DOC_GIA_LIST_PRINT:
             clrscr();
-            PrintDocGiaList(node_dstdg);
+            SetColor(6); gotoxy(30, 3); cout << "Danh sach doc gia";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "Sap xep theo ma doc gia";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "Sap xep theo ten doc gia";            
         break;
         
         case DAU_SACH:
@@ -262,8 +306,8 @@ int main(){
             SetColor(6); gotoxy(30, 3); cout << "Quan ly dau sach";
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them sach";
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xuat ra danh sach";
-            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Nhap danh sach the doc gia tu file";
-            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Xuat danh sach the doc gia tu file";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Nhap danh sach tu file";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Xuat danh sach ra file";
             SetColor(colorArray[4]); gotoxy(20,11);  cout << "5. Quay tro lai";
         break;
         case DAU_SACH_ADD: 
@@ -290,9 +334,9 @@ int main(){
             SetColor(colorArray[6]); gotoxy(40,13);  cout << viatri;
         break;
         case DAU_SACH_LIST:
-            clrscr();
             {
-                SetColor(6); gotoxy(30, 3); cout << "Danh sach dau sach";
+                clrscr();
+                SetColor(6); gotoxy(30, 3); cout << "Danh sach dau sach" << endl;
                 for(int i=0; i < arraydms_size; i++){
                     temp_dausach_list[i] = *node_dausach->node[i];
                 }
@@ -302,8 +346,78 @@ int main(){
                     SetColor(6); gotoxy(20, 10 + i);
                     cout << temp_dausach_list[i].ISBN << "--" << temp_dausach_list[i].tenSach<< "--" << temp_dausach_list[i].soTrang << "--" << temp_dausach_list[i].tacGia << "--" << temp_dausach_list[i].namXuatBan << "--" << temp_dausach_list[i].theLoai << "--" << temp_dausach_list[i].dms->dms.maSach << "--" << temp_dausach_list[i].dms->dms.viaTri << temp_dausach_list[i].dms->dms.trangThaiSach << endl;
                 }
+                cout << "Tim kiem: ";
+                string nameSearch;
+                fflush(stdin);
+                getline(cin, nameSearch);
+                DauSach* ds_rs = dau_sach::SearchDauSach(nameSearch, node_dausach);
+                if(ds_rs != NULL){
+                    cout << ds_rs->ISBN << "--" << ds_rs->tenSach << "--" << ds_rs->soTrang << "--" << ds_rs->tacGia << "--" << ds_rs->namXuatBan << "--" << ds_rs->theLoai << "--" << ds_rs->dms->dms.viaTri << ds_rs->dms->dms.trangThaiSach << endl;
+                }
+                else{
+                    cout << "Khong ton tai" << endl;  
+                }
+                
+                nav_dausach();
             }
         break;
+        case MUON_TRA:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Muon tra sasch";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Muon sach";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Tra sach";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Danh sach muon tra";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Top";
+            SetColor(colorArray[4]); gotoxy(20,11);  cout << "5. Quay tro lai";
+        break;
+        case MUON_TRA_M:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Muon sach";
+            SetColor(7); gotoxy(20,7);  cout << "Nhap ma the nguoi muon: ";
+            cin >> mathe_temp;
+            SetColor(7); gotoxy(20,8);  cout << "Nhap ma sach muon: ";
+            cin >> masach_temp;
+            SetColor(7); gotoxy(20,9);  cout << "Nhap ngay/thang/nam muon: ";
+            cin >> d >> m >> y;
+            
+            search_result = the_doc_gia::IDSearch(node_dstdg, mathe_temp, array_tdg, arraytdg_size);
+            dausach_searchrs = dau_sach::SearchDauSach(masach_temp, node_dausach);
+            
+            if(search_result != NULL && dausach_searchrs != NULL){
+                danh_sach_muon_tra::MuonSach(node_dsmt, node_rs_size, search_result, masach_temp, d, m, y);
+                cout << "Thanh cong! Nhan phim bat ki de tiep tuc" << endl;
+                getchar();            
+            }
+            
+        break;
+        case MUON_TRA_T:{
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Tra sach";
+            SetColor(7); gotoxy(20,7);  cout << "Nhap ma the nguoi muon: ";
+            cin >> mathe_temp;
+            SetColor(7); gotoxy(20,8);  cout << "Nhap ma sach muon: ";
+            cin >> masach_temp;
+            SetColor(7); gotoxy(20,9);  cout << "Nhap ngay/thang/nam tra: ";
+            cin >> d >> m >> y;
+            
+            search_result = the_doc_gia::IDSearch(node_dstdg, mathe_temp, array_tdg, arraytdg_size);
+            dsmt_rs = danh_sach_muon_tra::Findlist(mathe_temp, masach_temp, node_dsmt);
+            if(dsmt_rs != NULL){
+                danh_sach_muon_tra::TraSach(dsmt_rs, d, m, y, search_result, array_tdg, arraytdg_size);
+                cout << "Thanh cong! Nhan phim bat ki de tiep tuc" << endl;
+                getchar();  
+            }
+        }
+        break;
+        case MUON_TRA_LIST:{
+             clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "Danh sach muon tra";
+            SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Xuat ra danh sach";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Nhap tu file";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat ra file";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay lai";
+        break;
+        }
         default:
         break;
         }
@@ -333,8 +447,37 @@ int main(){
                     nav_docgia();
                 }
                 if(option == 1)nav_dausach();
-                if(option == 2)scene = MUON_TRA;
-                if(option == 3) return 0;
+                if(option == 2)nav_muontra();
+                if(option == 3) {
+                    fstream tdg("data/tdg.txt");
+                    fstream muontra("data/muontra.txt");
+                    fstream dausach("data/dausach.txt");
+                    
+                    the_doc_gia::ReadArrayID(tdg, array_tdg, arraytdg_size);
+                    the_doc_gia::ReadTheDocGia(tdg, node_dstdg, arraytdg_size);
+                    dau_sach::ReadArrayID(dausach, arrayDMS, arraydms_size);
+                    dau_sach::ReadBookData(dausach, node_dms, node_dausach, arraydms_size, arrayDMS);
+                    danh_sach_muon_tra::Read(muontra, node_dsmt, node_rs_size);
+                    
+                    SetColor(7); gotoxy(20,10);  cout << "Thanh cong, nhan phim bat ki de tiep tuc";
+                    getchar();
+                    
+                }
+                if(option == 4){
+                    fstream file("data/muontra.txt");
+                    danh_sach_muon_tra::Write(file, node_dsmt, node_rs_size);
+                    
+                    fstream file_tdg("data/tdg.txt");
+                    the_doc_gia::WriteArray(file_tdg, array_tdg, arraytdg_size);
+                    the_doc_gia::WriteTheDocGia(file_tdg, node_dstdg);
+                    
+                    fstream file_dausach("data/dausach.txt");
+                    dau_sach::WriteArrayDMS(file_dausach, arrayDMS, arraydms_size);
+                    dau_sach::WriteBookData(file_dausach, node_dausach);
+                    SetColor(3);gotoxy(20, 20);cout << "Xuat thanh cong!! Nhan phim bat ky de tiep tuc";
+                    getchar();
+                }
+                if(option == 5) return 0;
                 break;
             case DOC_GIA:
                 if(option == 0){
@@ -477,7 +620,35 @@ int main(){
                 }
             break;
             case DOC_GIA_LIST_PRINT:
-                nav_docgia_list();
+                if(option == 0){
+                    TheDocGia p_list_tdg[MAX_TDG];
+                    int export_count = 0;
+                    the_doc_gia::exportTDGtolist(node_dstdg, p_list_tdg, export_count);
+                    the_doc_gia::SortMaTheDocGia(p_list_tdg, export_count);
+                    for (int i = 0; i < export_count; i++)
+                    {
+                        cout << p_list_tdg[i].maThe << "--" << p_list_tdg[i].ho << "--" << p_list_tdg[i].ten << "--" << p_list_tdg[i].phai << "--" << p_list_tdg[i].trangThaiThe << "--" << p_list_tdg[i].luotMuon << "--"<< endl;
+                    }
+                    
+                    cout << "Nhan phim bat ki de tiep tuc"<< endl;
+                    export_count == 0;
+                    nav_docgia();
+                    getchar();
+                }
+                if(option == 1){
+                    TheDocGia p_list_tdg[MAX_TDG];
+                    int export_count = 0;
+                    the_doc_gia::exportTDGtolist(node_dstdg, p_list_tdg, export_count);
+                    the_doc_gia::SortTenDocGia(p_list_tdg, arraytdg_size);
+                    for (int i = 0; i < export_count; i++)
+                    {
+                        cout << p_list_tdg[i].maThe << "--" << p_list_tdg[i].ho << "--" << p_list_tdg[i].ten << "--" << p_list_tdg[i].phai << "--" << p_list_tdg[i].trangThaiThe << "--" << p_list_tdg[i].luotMuon << "--"<< endl;
+                    }
+                    cout << "Nhan phim bat ki de tiep tuc"<< endl;
+                    export_count == 0;
+                    nav_docgia();
+                    getchar();
+                }
             break;
             case DAU_SACH:
                 if(option == 0){
@@ -540,9 +711,42 @@ int main(){
                     nav_dausach();
                 }
             break;
-            case DAU_SACH_LIST:{
-                nav_dausach();
-            }
+            case DAU_SACH_LIST:
+            break;
+            case MUON_TRA:
+                if(option == 0) nav_muontra_m();
+                if(option == 1) nav_muontra_t();
+                if(option == 2) nav_muontra_list();
+                if(option == 3) nav_muontra_top();
+                if(option == 4) nav_mainmenu();
+            break;
+            case MUON_TRA_M:
+                nav_muontra();
+            break;
+            case MUON_TRA_T:
+                nav_muontra();
+            break;
+            case MUON_TRA_LIST:
+                if(option == 0){
+                    clrscr();
+                    danh_sach_muon_tra::print(node_dsmt);
+                    getchar();
+                    nav_muontra();
+                }
+                if(option == 1){
+                    fstream file("data/muontra.txt");
+                    danh_sach_muon_tra::Read(file, node_dsmt, node_rs_size);
+                    cout << "Thanh cong, nhan phim bat ki de tiep tuc" << endl;
+                    getchar();
+                }
+                if(option == 2){
+                    fstream file("data/muontra.txt");
+                    danh_sach_muon_tra::Write(file, node_dsmt, node_rs_size);
+                    cout << "Thanh cong, nhan phim bat ki de tiep tuc" << endl;
+                    getchar();
+                }
+                if(option == 3) nav_muontra();
+            break;
             default:
                 break;
             }
