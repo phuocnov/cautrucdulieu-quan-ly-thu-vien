@@ -494,8 +494,12 @@ namespace danh_sach_muon_tra{
             export_masach(result, list->next);
         }
     }
-    
-    void top_10(node_DanhSachMuonTra* list){
+    void swap(int &a, int &b){
+        int t = a;
+        a = b;
+        b = t;
+    }
+    void top_10(node_DanhSachMuonTra* list, node_DauSach* node_ds){
         int rs[100][2];
         int size = 0;
         
@@ -503,15 +507,16 @@ namespace danh_sach_muon_tra{
             if(size == 0){
                 rs[0][0] = list->data.maSach;
                 rs[0][1] = 1;
+                size++;
             }
             else{
                 for (int i = 0; i < size; i++)
                 {
                     if(list->data.maSach == rs[i][0]) rs[i][1]++;
                     if(i == size - 1 && list->data.maSach != rs[i][0]){
-                        size++;
                         rs[size][0] = list->data.maSach;
-                        rs[size][0] = 1;
+                        rs[size][1] = 1;
+                        size++;
                     }
                 }
                 
@@ -520,7 +525,19 @@ namespace danh_sach_muon_tra{
         }
         
         for(int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++)
+            {
+                if(rs[i][1] > rs[j][1]){
+                    swap(rs[i][0], rs[j][0]);
+                    swap(rs[i][1], rs[j][1]);
+                }
+            }
             
+        }
+        
+        for(int i = 0; i < size; i++){
+            DauSach* emp = dau_sach::SearchDauSach(rs[i][0], node_ds);
+            cout << emp->tenSach << "--" << emp->tacGia << "--" << "luot muon: "<< rs[i][1] << endl;
         }
     }
 }

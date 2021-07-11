@@ -143,7 +143,7 @@ void nav_muontra_list(){
     option = 0;
 }
 void nav_muontra_top(){
-    scene = MUON_TRA_T;
+    scene = MUON_TRA_TOP;
     resetcolorarray(colorArray, optionSize);
     optionSize = 1;
     option = 0;
@@ -195,10 +195,7 @@ int main(){
 		    SetColor(colorArray[2]); gotoxy(20,9);  cout << "3) Danh Sach Muon Tra";
 		    SetColor(colorArray[3]); gotoxy(20,10); cout << "4) Load data";
 		    SetColor(colorArray[4]); gotoxy(20,11); cout << "5) Save data";
-		    SetColor(colorArray[5]); gotoxy(20,12); cout << "6) Thoat chuong trinh";
-            
-		    SetColor(7); gotoxy(20,15); cout << option;
-            
+		    SetColor(colorArray[5]); gotoxy(20,12); cout << "6) Thoat chuong trinh";            
         break;
         case DOC_GIA:
             clrscr();
@@ -431,15 +428,17 @@ int main(){
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Xuat ra danh sach";
             // SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Sach doc gia dang muon";
             // SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat ra file";
-            SetColor(colorArray[2]); gotoxy(20,8);  cout << "2. Quay lai";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Quay lai";
         break;
-        }
-        default:
         case MUON_TRA_TOP:
             clrscr();
-            SetColor(6); gotoxy(30, 3); cout << "";
-            
-        break;
+            SetColor(6); gotoxy(30, 3); cout << "Top 10 cuon sach duoc muon nhieu nhat" << endl;
+            SetColor(7); gotoxy(0, 5);
+            danh_sach_muon_tra::top_10(node_dsmt, node_dausach);
+            cout << "Nhan phim enter de tiep tuc" << endl;
+        break; 
+        }
+        default:
         break;
         }
         system("pause>nul");
@@ -783,6 +782,10 @@ int main(){
                 //     getchar();
                 // }
                 if(option == 1) nav_muontra();
+                
+            break;
+            case MUON_TRA_TOP:
+                nav_muontra();
             break;
             default:
                 break;
