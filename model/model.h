@@ -534,10 +534,17 @@ namespace danh_sach_muon_tra{
             }
             
         }
-        
-        for(int i = 0; i < size; i++){
-            DauSach* emp = dau_sach::SearchDauSach(rs[i][0], node_ds);
-            cout << emp->tenSach << "--" << emp->tacGia << "--" << "luot muon: "<< rs[i][1] << endl;
+        if(size <= 10){
+            for(int i = 0; i < size; i++){
+                DauSach* emp = dau_sach::SearchDauSach(rs[i][0], node_ds);
+                cout << emp->tenSach << "--" << emp->tacGia << "--" << "luot muon: "<< rs[i][1] << endl;
+            }
+        }
+        else{
+            for(int i = 0; i < 10; i++){
+                DauSach* emp = dau_sach::SearchDauSach(rs[i][0], node_ds);
+                cout << emp->tenSach << "--" << emp->tacGia << "--" << "luot muon: "<< rs[i][1] << endl;
+            }
         }
     }
 }
