@@ -478,7 +478,49 @@ namespace danh_sach_muon_tra{
             if(list->data.trangThaiMuonTra == DA_TRA)
                 cout << "Ngay tra: " <<  list->data.ngayTra.day << "/" << list->data.ngayTra.month << "/" << list->data.ngayTra.year;
             cout << endl;
-            print_person(ID, list->next);
+        }
+        if(list->next != NULL) print_person(ID, list->next);
+    }
+    
+    struct listmasach{
+        int arr_mathe[100];
+        int size = 0;
+    };
+    listmasach export_masach(listmasach result, node_DanhSachMuonTra* list){
+        while (list != NULL)
+        {
+            result.arr_mathe[result.size] =  list->data.maSach;
+            result.size++;
+            export_masach(result, list->next);
+        }
+    }
+    
+    void top_10(node_DanhSachMuonTra* list){
+        int rs[100][2];
+        int size = 0;
+        
+        while(list != NULL){
+            if(size == 0){
+                rs[0][0] = list->data.maSach;
+                rs[0][1] = 1;
+            }
+            else{
+                for (int i = 0; i < size; i++)
+                {
+                    if(list->data.maSach == rs[i][0]) rs[i][1]++;
+                    if(i == size - 1 && list->data.maSach != rs[i][0]){
+                        size++;
+                        rs[size][0] = list->data.maSach;
+                        rs[size][0] = 1;
+                    }
+                }
+                
+            }
+            list = list->next;
+        }
+        
+        for(int i = 0; i < size; i++){
+            
         }
     }
 }

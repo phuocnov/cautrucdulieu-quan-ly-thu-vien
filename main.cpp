@@ -213,7 +213,7 @@ int main(){
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them";
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xoa";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Sua";
-            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Tim kiem";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Tim kiem sach dang muon";
             SetColor(colorArray[4]); gotoxy(20,11);  cout << "5. Quay tro lai";
         break;
         case DOC_GIA_PERSONAL_ADD:
@@ -528,13 +528,14 @@ int main(){
                     search_result = the_doc_gia::IDSearch(node_dstdg, IDsearch, array_tdg, arraytdg_size);
                     if(search_result !=NULL){
                         danh_sach_muon_tra::print_person(IDsearch, node_dsmt);
-                        fflush(stdin);
-                        getchar();
                     }
                     else{
                         cout << "Ma the khong ton tai";
-                        getchar();
                     }
+                    cout << "Nhan phim bat ki de tiep tuc";
+                    char r;
+                    fflush(stdin);
+                    getchar();
                 }
                 if(option == 4){
                     nav_docgia();
