@@ -470,6 +470,15 @@ namespace danh_sach_muon_tra{
             cout << endl;
             print(list->next);
         }
-        
+    }
+    void print_person(int ID, node_DanhSachMuonTra* list){
+        if (list != NULL && list->data.IDnguoimuon == ID && list->data.trangThaiMuonTra == DANG_MUON)
+        {
+            cout << list->data.IDnguoimuon << "--" << list->data.maSach << "--" << list->data.ngayMuon.day << "/" << list->data.ngayMuon.month << "/" << list->data.ngayMuon.year;
+            if(list->data.trangThaiMuonTra == DA_TRA)
+                cout << "Ngay tra: " <<  list->data.ngayTra.day << "/" << list->data.ngayTra.month << "/" << list->data.ngayTra.year;
+            cout << endl;
+            print_person(ID, list->next);
+        }
     }
 }

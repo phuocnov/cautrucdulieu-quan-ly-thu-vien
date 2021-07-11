@@ -61,7 +61,7 @@ void nav_docgia(){
 
 void nav_docgia_personal(){
     scene = DOC_GIA_PERSONAL;
-    optionSize = 4;
+    optionSize = 5;
     option = 0;
     resetcolorarray(colorArray, optionSize);
 }
@@ -213,7 +213,8 @@ int main(){
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Them";
             SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Xoa";
             SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Sua";
-            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Quay tro lai";
+            SetColor(colorArray[3]); gotoxy(20,10);  cout << "4. Tim kiem";
+            SetColor(colorArray[4]); gotoxy(20,11);  cout << "5. Quay tro lai";
         break;
         case DOC_GIA_PERSONAL_ADD:
             clrscr();
@@ -428,12 +429,17 @@ int main(){
              clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Danh sach muon tra";
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Xuat ra danh sach";
-            // SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Nhap tu file";
+            // SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Sach doc gia dang muon";
             // SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat ra file";
-            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Quay lai";
+            SetColor(colorArray[2]); gotoxy(20,8);  cout << "2. Quay lai";
         break;
         }
         default:
+        case MUON_TRA_TOP:
+            clrscr();
+            SetColor(6); gotoxy(30, 3); cout << "";
+            
+        break;
         break;
         }
         system("pause>nul");
@@ -516,6 +522,21 @@ int main(){
                     nav_docgia_personal_adjust();
                 }
                 if(option == 3){
+                    clrscr();
+                    cout << "Nhap ma the: ";
+                    cin >> IDsearch;
+                    search_result = the_doc_gia::IDSearch(node_dstdg, IDsearch, array_tdg, arraytdg_size);
+                    if(search_result !=NULL){
+                        danh_sach_muon_tra::print_person(IDsearch, node_dsmt);
+                        fflush(stdin);
+                        getchar();
+                    }
+                    else{
+                        cout << "Ma the khong ton tai";
+                        getchar();
+                    }
+                }
+                if(option == 4){
                     nav_docgia();
                 }
                 break;
