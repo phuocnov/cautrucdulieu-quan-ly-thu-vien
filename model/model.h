@@ -483,17 +483,30 @@ namespace danh_sach_muon_tra{
     }
     
     struct listmasach{
-        int arr_mathe[100];
-        int size = 0;
+        int masach;
+        int mathe;
+        int quahan;
     };
-    listmasach export_masach(listmasach result, node_DanhSachMuonTra* list){
-        while (list != NULL)
+    void export_masach(listmasach result[], int &size, node_DanhSachMuonTra* list, Date today){
+        if (list != NULL)
         {
-            result.arr_mathe[result.size] =  list->data.maSach;
-            result.size++;
-            export_masach(result, list->next);
+            int test = getDateDifference(list->data.ngayMuon, today);
+            if(list->data.trangThaiMuonTra == DANG_MUON && getDateDifference(list->data.ngayMuon, today) > 7){
+                result[size].masach = list->data.maSach;
+                result[size].mathe = list->data.IDnguoimuon;
+                result[size].quahan = getDateDifference(list->data.ngayMuon, today);
+                size++;
+            }
+            export_masach(result, size, list->next, today);
         }
     }
+    void swaplist_masach(listmasach &a, listmasach &b){
+        listmasach t = a;
+        a = b;
+        b = t;
+    }
+    
+    
     void swap(int &a, int &b){
         int t = a;
         a = b;
@@ -546,5 +559,29 @@ namespace danh_sach_muon_tra{
                 cout << emp->tenSach << "--" << emp->tacGia << "--" << "luot muon: "<< rs[i][1] << endl;
             }
         }
+    }
+    
+    void list_chua_tra(Date today, node_DanhSachMuonTra* node_dsmt, node_DanhSachTheDocGia* dstdg, int array_dstdg[], int size, node_DauSach* ds){
+        listmasach rs[100];
+        int listsize = 0;
+        export_masach(rs, listsize, node_dsmt, today);
+        
+        for (int i = 0; i < listsize; i++)
+        {
+            for (int j = 0; j < listsize; j++)
+            {
+                if(rs[i].quahan < rs[j].quahan) swaplist_masach(rs[i], rs[j]);
+            }
+        }
+        
+        for (int i = 0; i < listsize; i++)
+        {
+            node_DanhSachTheDocGia* nguoimuon = the_doc_gia::IDSearch(dstdg, rs[i].mathe, array_dstdg, size);
+            DauSach* sach = dau_sach::SearchDauSach(rs[i].masach, ds);
+            if(nguoimuon != NULL){
+                cout << nguoimuon->data.ho << " " << nguoimuon->data.ten << "-- muon sach: " << sach->tenSach << " qua han" << rs[i].quahan << "ngay"<< endl;
+            }
+        }
+        
     }
 }

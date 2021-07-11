@@ -138,7 +138,7 @@ void nav_muontra_t(){
 }
 void nav_muontra_list(){
     scene = MUON_TRA_LIST;
-    optionSize = 2;
+    optionSize = 3;
     resetcolorarray(colorArray, optionSize);
     option = 0;
 }
@@ -426,9 +426,9 @@ int main(){
              clrscr();
             SetColor(6); gotoxy(30, 3); cout << "Danh sach muon tra";
             SetColor(colorArray[0]); gotoxy(20,7);  cout << "1. Xuat ra danh sach";
-            // SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Sach doc gia dang muon";
+            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Danh sach muon qua han";
             // SetColor(colorArray[2]); gotoxy(20,9);  cout << "3. Xuat ra file";
-            SetColor(colorArray[1]); gotoxy(20,8);  cout << "2. Quay lai";
+            SetColor(colorArray[2]); gotoxy(20,9);  cout << "2. Quay lai";
         break;
         case MUON_TRA_TOP:
             clrscr();
@@ -766,6 +766,8 @@ int main(){
                 if(option == 0){
                     clrscr();
                     danh_sach_muon_tra::print(node_dsmt);
+                    
+                    
                     getchar();
                     nav_muontra();
                 }
@@ -781,7 +783,24 @@ int main(){
                 //     cout << "Thanh cong, nhan phim bat ki de tiep tuc" << endl;
                 //     getchar();
                 // }
-                if(option == 1) nav_muontra();
+                if(option  == 1){
+                    clrscr();
+                    cout << endl;
+                    cout << "Danh sach muon qua han, nhap ngay hom nay (d/m/y): ";
+                    cin >> d >> m >> y;
+                    if(check_date(d,m,y)){
+                        Date today;
+                        today.day = d;
+                        today.month = m;
+                        today.year = y;
+                        
+                        danh_sach_muon_tra::list_chua_tra(today, node_dsmt, node_dstdg, array_tdg, arraytdg_size, node_dausach);
+                        fflush(stdin);
+                        SetColor(3);gotoxy(20, 17);cout << "Thanh cong!!, nhan phim bat ky de tiep tuc";
+                        getchar();
+                    }
+                }
+                if(option == 2) nav_muontra();
                 
             break;
             case MUON_TRA_TOP:
