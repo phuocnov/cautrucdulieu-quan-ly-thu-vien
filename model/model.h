@@ -408,8 +408,8 @@ namespace danh_sach_muon_tra{
             data.ngayMuon.year = nam;
             data.trangThaiMuonTra = DANG_MUON;
             nguoiMuon->data.luotMuon--;
-            size++;
             if(dsmt == NULL){
+                size++;
                 dsmt = new node_DanhSachMuonTra;
                 dsmt->data = data;
                 dsmt->next = NULL;

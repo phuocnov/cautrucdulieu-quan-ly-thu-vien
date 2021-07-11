@@ -105,11 +105,11 @@ bool check_date(int d, int m, int y){
         cout << "Nam phai la 1 so duong, lon hon 0" << endl;
         return false;
     }
-    if(m < 1 && m > 12){
+    if(m < 1 || m > 12){
          cout << "Thang phai la 1 so nguyen tu 1-12" << endl;
          return false;
     }
-    if(d < 1 && d > dateOfMonth[m]){
+    if(d < 1 || d > dateOfMonth[m]){
         cout << "Ngay phai trong khoang 1, " << dateOfMonth[m]<< endl;
         return false;
     }
